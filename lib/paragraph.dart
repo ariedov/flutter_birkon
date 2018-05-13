@@ -42,19 +42,7 @@ class ParagraphState extends State<PrayerParagraph> {
   Widget build(BuildContext context) {
     return new Stack(
       children: <Widget>[
-        new Opacity(
-            opacity: _showRussian ? 1.0 : 0.0,
-            child: new Container(
-                decoration: new BoxDecoration(color: Colors.white),
-                margin: new EdgeInsets.only(right: 10.0),
-                child: new Text(widget.russian))),
-        new Opacity(opacity: 1.0, child: new Text(widget.transliteration)),
-        new Opacity(
-            opacity: _showHebrew ? 1.0 : 0.0,
-            child: new Container(
-                decoration: new BoxDecoration(color: Colors.white),
-                margin: new EdgeInsets.only(left: 10.0),
-                child: new Text(widget.hebrew)))
+        new Text(widget.transliteration),
       ],
     );
   }
