@@ -69,24 +69,32 @@ class _MyHomePageState extends State<MyHomePage> {
             // the App.build method, and use it to set our appbar title.
             title: new Text(widget.title),
           ),
-          body: new ListView(
-            children: <Widget>[
-              new PrayerTitle(title: prayer.title.transliteration),
-              new PrayerParagraph(
-                  russian: "russian",
-                  transliteration: "transliteration",
-                  hebrew: "hebrew")
-            ],
-          )
-      );
+          body: new ListView.builder(
+              itemCount: prayer.paragraphs.length + 1,
+              itemBuilder: _listViewBuilder
+          ));
     } else if (e != null) {
       return new Container(
-          child: new Text(e.toString()));
+          child: new Text(e
+              .toString()));
     } else {
       return new Container(
           width: 10.0,
-          height: 10.0,
+          height:
+          10.0,
           child: new CircularProgressIndicator());
     }
+  }
+
+  Widget _listViewBuilder(BuildContext context, int index) {
+    if (index == 0) {
+      return new PrayerTitle(title: prayer.title.transliteration);
+    }
+
+    TranslatedString paragraph = prayer.paragraphs[index - 1];
+    return new PrayerParagraph(
+        russian: paragraph.russian,
+        transliteration: paragraph.transliteration,
+        hebrew: paragraph.hebrew);
   }
 }

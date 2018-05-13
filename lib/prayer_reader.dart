@@ -18,6 +18,14 @@ class PrayerReader {
         decodedPrayer["title"]["transliteration"],
         decodedPrayer["title"]["he"]);
 
-    return new Prayer(title, new List());
+    List<TranslatedString> paragraphs = new List();
+    for (dynamic paragraph in decodedPrayer["paragraphs"]) {
+      paragraphs.add(new TranslatedString(
+          paragraph["ru"],
+          paragraph["transliteration"],
+          paragraph["he"]));
+    }
+
+    return new Prayer(title, paragraphs);
   }
 }
