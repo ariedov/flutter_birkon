@@ -1,4 +1,5 @@
 import 'package:birkon/dao/translated_string.dart';
+import 'package:birkon/view/prayer_text.dart';
 import 'package:flutter/material.dart';
 
 class PrayerParagraph extends StatefulWidget {
@@ -17,20 +18,11 @@ class ParagraphState extends State<PrayerParagraph> {
 
   @override
   Widget build(BuildContext context) {
-    return new Padding(
-      padding: EdgeInsets.all(16.0),
-      child: new GestureDetector(
-          onTap: () {
-            widget.listener(widget.paragraph);
-          },
-          child: new Text(
-            widget.paragraph.transliteration.text,
-            textDirection: widget.paragraph.transliteration.direction,
-            style: new TextStyle(
-              fontSize: 16.0,
-            )
-        )
-      ),
+    return new GestureDetector(
+      onTap: () {
+        widget.listener(widget.paragraph);
+      },
+      child: new PrayerText(widget.paragraph.transliteration)
     );
   }
 }

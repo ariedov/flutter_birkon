@@ -1,8 +1,8 @@
 import 'package:birkon/dao/directional_string.dart';
+import 'package:birkon/view/prayer_text.dart';
 import 'package:flutter/material.dart';
 
 class PrayerBottomSheet extends StatelessWidget {
-
   final DirectionalString left;
   final DirectionalString right;
 
@@ -10,23 +10,28 @@ class PrayerBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Container(
-      height: 150.0,
-      child: new PageView(
-        children: <Widget>[
-          new ListView(
-            children: <Widget>[
-              new Text(left.text, textDirection: left.direction)
-            ],
-          ),
-
-          new ListView(
-            children: <Widget>[
-              new Text(right.text, textDirection: right.direction)
-            ],
-          )
-        ],
-      ),
-    );
+    return new DefaultTabController(
+        length: 2,
+        child: new Column(
+          children: <Widget>[
+            new TabBar(tabs: <Tab>[
+              new Tab(text: "LEFT"),
+              new Tab(text: "RIGHT"),
+            ]),
+            new Container(
+              height: 200.0,
+              child: new TabBarView(
+                children: <Widget>[
+                  new ListView(
+                    children: <Widget>[new PrayerText(left)],
+                  ),
+                  new ListView(
+                    children: <Widget>[new PrayerText(right)],
+                  )
+                ],
+              ),
+            )
+          ],
+        ));
   }
 }
