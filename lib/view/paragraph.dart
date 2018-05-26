@@ -14,36 +14,22 @@ class PrayerParagraph extends StatefulWidget {
 }
 
 class ParagraphState extends State<PrayerParagraph> {
-  bool _showRussian;
-  bool _showHebrew;
-
-  void showRussian() {
-    setState(() {
-      _showRussian = true;
-      _showHebrew = false;
-    });
-  }
-
-  void showHebrew() {
-    setState(() {
-      _showRussian = false;
-      _showHebrew = true;
-    });
-  }
-
-  void hideTranslations() {
-    setState(() {
-      _showRussian = false;
-      _showHebrew = false;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
-    return new Stack(
-      children: <Widget>[
-        new Text(widget.transliteration),
-      ],
+    return new Padding(
+      padding: EdgeInsets.all(16.0),
+      child: new GestureDetector(
+          onTap: () {
+
+          },
+          child: new Text(
+            widget.transliteration,
+            style: new TextStyle(
+              fontSize: 16.0,
+            )
+        )
+      ),
     );
   }
 }
