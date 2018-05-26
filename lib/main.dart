@@ -1,3 +1,5 @@
+import 'package:birkon/dao/translated_string.dart';
+import 'package:birkon/view/bottom_sheet.dart';
 import 'package:birkon/view/paragraph.dart';
 import 'package:birkon/prayer.dart';
 import 'package:birkon/prayer_reader.dart';
@@ -55,11 +57,23 @@ class _MyHomePageState extends State<MyHomePage> {
     if (prayer != null) {
       return new Scaffold(
           appBar: new AppBar(
-            title: new Text(prayer.title.transliteration.toUpperCase()),
+            title: new Text(prayer.title.transliteration.text.toUpperCase()),
           ),
           body: new ListView.builder(
               itemCount: prayer.paragraphs.length,
-              itemBuilder: _listViewBuilder
+              itemBuilder: (context, index) {
+                TranslatedString paragraph = prayer.paragraphs[index];
+                return new PrayerParagraph(
+                  paragraph: paragraph,
+                  listener: (paragraph) {
+                    showModalBottomSheet(context: context, builder: (BuildContext context) {
+                      return new PrayerBottomSheet(
+                          left: paragraph.russian,
+                          right: paragraph.hebrew);
+                    });
+                  },
+                );
+              }
           ));
     } else if (e != null) {
       return new Container(
@@ -72,13 +86,5 @@ class _MyHomePageState extends State<MyHomePage> {
           10.0,
           child: new CircularProgressIndicator());
     }
-  }
-
-  Widget _listViewBuilder(BuildContext context, int index) {
-    TranslatedString paragraph = prayer.paragraphs[index];
-    return new PrayerParagraph(
-        russian: paragraph.russian,
-        transliteration: paragraph.transliteration,
-        hebrew: paragraph.hebrew);
   }
 }

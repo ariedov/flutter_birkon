@@ -1,12 +1,12 @@
+import 'package:birkon/dao/translated_string.dart';
 import 'package:flutter/material.dart';
 
 class PrayerParagraph extends StatefulWidget {
-  final String russian;
-  final String transliteration;
-  final String hebrew;
+  final TranslatedString paragraph;
+  final ParagraphClickListener listener;
 
   const PrayerParagraph(
-      {Key key, this.russian, this.transliteration, this.hebrew})
+      {Key key, this.paragraph, this.listener})
       : super(key: key);
 
   @override
@@ -21,10 +21,11 @@ class ParagraphState extends State<PrayerParagraph> {
       padding: EdgeInsets.all(16.0),
       child: new GestureDetector(
           onTap: () {
-
+            widget.listener(widget.paragraph);
           },
           child: new Text(
-            widget.transliteration,
+            widget.paragraph.transliteration.text,
+            textDirection: widget.paragraph.transliteration.direction,
             style: new TextStyle(
               fontSize: 16.0,
             )
@@ -33,3 +34,5 @@ class ParagraphState extends State<PrayerParagraph> {
     );
   }
 }
+
+typedef void ParagraphClickListener(TranslatedString paragraph);

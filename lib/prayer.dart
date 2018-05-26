@@ -1,3 +1,5 @@
+import 'package:birkon/dao/translated_string.dart';
+
 class Prayer {
   final TranslatedString title;
   final List<TranslatedString> paragraphs;
@@ -5,11 +7,3 @@ class Prayer {
   Prayer(this.title, this.paragraphs);
 }
 
-class TranslatedString {
-
-  final String russian;
-  final String transliteration;
-  final String hebrew;
-
-  TranslatedString(this.russian, this.transliteration, this.hebrew);
-}
