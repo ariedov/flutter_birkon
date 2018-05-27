@@ -1,16 +1,12 @@
 import 'package:birkon/dao/directional_string.dart';
 import 'package:flutter/material.dart';
 
-class PrayerText extends Padding {
+class PrayerText extends Text {
 
-  PrayerText(DirectionalString data) : super(
-    padding: EdgeInsets.all(16.0),
-    child: new Text(
-      data.text,
-      textDirection: data.direction,
-      style: new TextStyle(
-        fontSize: 16.0,
-      )
-    )
-  );
+  PrayerText(DirectionalString data)
+      : super(data.text,
+            textDirection: data.direction,
+            style: new TextStyle(
+              fontSize: 16.0,
+            ));
 }

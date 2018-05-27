@@ -13,20 +13,25 @@ class PrayerBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return new DefaultTabController(
         length: 2,
-        child: new ListView(
+        child: new Column(
           children: <Widget>[
-            new TabBar(
-              labelColor: Colors.black,
-              tabs: <Tab>[
-                new Tab(text: AppLocalizations.get(context, left.titleKey)),
-                new Tab(text: AppLocalizations.get(context, right.titleKey)),
-              ]),
-            new Container(
-              height: 200.0,
+            new TabBar(labelColor: Colors.black, tabs: <Tab>[
+              new Tab(text: AppLocalizations.get(context, left.titleKey)),
+              new Tab(text: AppLocalizations.get(context, right.titleKey)),
+            ]),
+            new Expanded(
               child: new TabBarView(
                 children: <Widget>[
-                  new PrayerText(left.string),
-                  new PrayerText(right.string),
+                  new ListView(children: <Widget>[
+                    new Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: new PrayerText(left.string))
+                  ]),
+                  new ListView(children: <Widget>[
+                    new Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: new PrayerText(right.string))
+                  ]),
                 ],
               ),
             )
@@ -36,11 +41,8 @@ class PrayerBottomSheet extends StatelessWidget {
 }
 
 class TranslationTab {
-
   final DirectionalString string;
   final String titleKey;
 
   TranslationTab(this.string, this.titleKey);
-
-
 }
