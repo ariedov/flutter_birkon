@@ -13,7 +13,7 @@ class PrayerBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return new DefaultTabController(
         length: 2,
-        child: new Column(
+        child: new ListView(
           children: <Widget>[
             new TabBar(
               labelColor: Colors.black,
@@ -25,12 +25,8 @@ class PrayerBottomSheet extends StatelessWidget {
               height: 200.0,
               child: new TabBarView(
                 children: <Widget>[
-                  new ListView(
-                    children: <Widget>[new PrayerText(left.string)],
-                  ),
-                  new ListView(
-                    children: <Widget>[new PrayerText(right.string)],
-                  )
+                  new PrayerText(left.string),
+                  new PrayerText(right.string),
                 ],
               ),
             )

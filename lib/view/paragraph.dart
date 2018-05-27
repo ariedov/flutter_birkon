@@ -18,7 +18,7 @@ class ParagraphState extends State<PrayerParagraph> {
 
   @override
   Widget build(BuildContext context) {
-    return new GestureDetector(
+    return new InkWell(
       onTap: () {
         widget.listener(widget.paragraph);
       },
