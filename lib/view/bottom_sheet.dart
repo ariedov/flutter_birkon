@@ -1,10 +1,11 @@
 import 'package:birkon/dao/directional_string.dart';
+import 'package:birkon/localization/localizations.dart';
 import 'package:birkon/view/prayer_text.dart';
 import 'package:flutter/material.dart';
 
 class PrayerBottomSheet extends StatelessWidget {
-  final DirectionalString left;
-  final DirectionalString right;
+  final TranslationTab left;
+  final TranslationTab right;
 
   const PrayerBottomSheet({Key key, this.left, this.right}) : super(key: key);
 
@@ -14,19 +15,21 @@ class PrayerBottomSheet extends StatelessWidget {
         length: 2,
         child: new Column(
           children: <Widget>[
-            new TabBar(tabs: <Tab>[
-              new Tab(text: "LEFT"),
-              new Tab(text: "RIGHT"),
-            ]),
+            new TabBar(
+              labelColor: Colors.black,
+              tabs: <Tab>[
+                new Tab(text: AppLocalizations.get(context, left.titleKey)),
+                new Tab(text: AppLocalizations.get(context, right.titleKey)),
+              ]),
             new Container(
               height: 200.0,
               child: new TabBarView(
                 children: <Widget>[
                   new ListView(
-                    children: <Widget>[new PrayerText(left)],
+                    children: <Widget>[new PrayerText(left.string)],
                   ),
                   new ListView(
-                    children: <Widget>[new PrayerText(right)],
+                    children: <Widget>[new PrayerText(right.string)],
                   )
                 ],
               ),
@@ -34,4 +37,14 @@ class PrayerBottomSheet extends StatelessWidget {
           ],
         ));
   }
+}
+
+class TranslationTab {
+
+  final DirectionalString string;
+  final String titleKey;
+
+  TranslationTab(this.string, this.titleKey);
+
+
 }

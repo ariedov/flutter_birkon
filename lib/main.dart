@@ -1,4 +1,5 @@
 import 'package:birkon/dao/translated_string.dart';
+import 'package:birkon/localization/localizations.dart';
 import 'package:birkon/view/bottom_sheet.dart';
 import 'package:birkon/view/paragraph.dart';
 import 'package:birkon/prayer.dart';
@@ -68,8 +69,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   listener: (paragraph) {
                     showModalBottomSheet(context: context, builder: (BuildContext context) {
                       return new PrayerBottomSheet(
-                          left: paragraph.russian,
-                          right: paragraph.hebrew);
+                          left: new TranslationTab(paragraph.russian, RUSSIAN),
+                          right: new TranslationTab(paragraph.hebrew, HEBREW)
+                      );
                     });
                   },
                 );
