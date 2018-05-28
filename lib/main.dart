@@ -1,6 +1,4 @@
-import 'package:birkon/model/string_provider.dart';
-import 'package:birkon/view/bottom_sheet.dart';
-import 'package:birkon/view/paragraph.dart';
+import 'package:birkon/prayer/prayer_screen.dart';
 import 'package:birkon/model/prayer.dart';
 import 'package:birkon/model/prayer_reader.dart';
 import 'package:flutter/material.dart';
@@ -55,26 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     if (prayer != null) {
-      return new Scaffold(
-          appBar: new AppBar(
-            title: new Text(new StringProvider(context, prayer.title).primary.text.toUpperCase()),
-          ),
-          body: new ListView.builder(
-              itemCount: prayer.paragraphs.length,
-              itemBuilder: (context, index) {
-                return new PrayerParagraph(
-                  paragraphProvider: new StringProvider(context, prayer.paragraphs[index]),
-                  listener: (paragraph) {
-                    showModalBottomSheet(context: context, builder: (BuildContext context) {
-                      return new PrayerBottomSheet(
-                          left: new TranslationTab(paragraph.secondary, paragraph.secondaryTitle),
-                          right: new TranslationTab(paragraph.ternary, paragraph.ternaryTitle)
-                      );
-                    });
-                  },
-                );
-              }
-          ));
+      return new PrayerScreen(context, prayer);
     } else if (e != null) {
       return new Container(
           child: new Text(e

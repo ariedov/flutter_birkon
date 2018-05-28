@@ -1,5 +1,5 @@
 import 'package:birkon/model/string_provider.dart';
-import 'package:birkon/view/prayer_text.dart';
+import 'package:birkon/prayer/view/prayer_text.dart';
 import 'package:flutter/material.dart';
 
 class PrayerParagraph extends StatefulWidget {
