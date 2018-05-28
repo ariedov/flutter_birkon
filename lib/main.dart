@@ -1,9 +1,9 @@
-import 'package:birkon/dao/translated_string.dart';
-import 'package:birkon/localization/localizations.dart';
+import 'package:birkon/localization/keys.dart';
+import 'package:birkon/model/string_provider.dart';
 import 'package:birkon/view/bottom_sheet.dart';
 import 'package:birkon/view/paragraph.dart';
-import 'package:birkon/prayer.dart';
-import 'package:birkon/prayer_reader.dart';
+import 'package:birkon/model/prayer.dart';
+import 'package:birkon/model/prayer_reader.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(new MyApp());
@@ -58,19 +58,18 @@ class _MyHomePageState extends State<MyHomePage> {
     if (prayer != null) {
       return new Scaffold(
           appBar: new AppBar(
-            title: new Text(prayer.title.transliteration.text.toUpperCase()),
+            title: new Text(new StringProvider(context, prayer.title).primary.text.toUpperCase()),
           ),
           body: new ListView.builder(
               itemCount: prayer.paragraphs.length,
               itemBuilder: (context, index) {
-                TranslatedString paragraph = prayer.paragraphs[index];
                 return new PrayerParagraph(
-                  paragraph: paragraph,
+                  paragraphProvider: new StringProvider(context, prayer.paragraphs[index]),
                   listener: (paragraph) {
                     showModalBottomSheet(context: context, builder: (BuildContext context) {
                       return new PrayerBottomSheet(
-                          left: new TranslationTab(paragraph.russian, RUSSIAN),
-                          right: new TranslationTab(paragraph.hebrew, HEBREW)
+                          left: new TranslationTab(paragraph.secondary, paragraph.secondaryTitle),
+                          right: new TranslationTab(paragraph.ternary, paragraph.ternaryTitle)
                       );
                     });
                   },
@@ -84,8 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       return new Container(
           width: 10.0,
-          height:
-          10.0,
+          height: 10.0,
           child: new CircularProgressIndicator());
     }
   }

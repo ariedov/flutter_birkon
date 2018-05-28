@@ -1,12 +1,12 @@
-import 'package:birkon/dao/translated_string.dart';
+import 'package:birkon/model/string_provider.dart';
 import 'package:birkon/view/prayer_text.dart';
 import 'package:flutter/material.dart';
 
 class PrayerParagraph extends StatefulWidget {
-  final TranslatedString paragraph;
+  final StringProvider paragraphProvider;
   final ParagraphClickListener listener;
 
-  const PrayerParagraph({Key key, this.paragraph, this.listener})
+  const PrayerParagraph({Key key, this.paragraphProvider, this.listener})
       : super(key: key);
 
   @override
@@ -18,15 +18,14 @@ class ParagraphState extends State<PrayerParagraph> {
   Widget build(BuildContext context) {
     return new InkWell(
         onTap: () {
-          widget.listener(widget.paragraph);
+          widget.listener(widget.paragraphProvider);
         },
         child: new Padding(
             padding: EdgeInsets.all(16.0),
             child: new Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                new PrayerText(widget.paragraph.transliteration),
+                new PrayerText(widget.paragraphProvider.primary),
                 new Align(
                   alignment: Alignment.bottomRight,
                   child: new RotatedBox(
@@ -36,7 +35,7 @@ class ParagraphState extends State<PrayerParagraph> {
                           fontFamily: 'MaterialIcons',
                           matchTextDirection: true),
                       size: 12.0,
-                      textDirection: widget.paragraph.transliteration.direction,
+                      textDirection: widget.paragraphProvider.primary.direction,
                     ),
                   ),
                 ),
@@ -45,4 +44,4 @@ class ParagraphState extends State<PrayerParagraph> {
   }
 }
 
-typedef void ParagraphClickListener(TranslatedString paragraph);
+typedef void ParagraphClickListener(StringProvider paragraph);

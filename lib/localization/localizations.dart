@@ -1,23 +1,12 @@
+import 'package:birkon/localization/he.dart' as hebrew;
+import 'package:birkon/localization/ru.dart' as russian;
 import 'package:flutter/material.dart';
-
-const String RUSSIAN = "russian";
-const String TRANSLIATERATION = "transliteration";
-const String HEBREW = "hebrew";
 
 class AppLocalizations {
 
   static Map<String, Map<String, String>> _localizedValues = {
-    'ru': {
-      RUSSIAN: "Русский",
-      TRANSLIATERATION: "Транслитерация",
-      HEBREW: "Иврит",
-    },
-
-    'he': {
-      RUSSIAN: "רוסית",
-      TRANSLIATERATION: "תעתיק",
-      HEBREW: "עברית",
-    }
+    'ru': russian.translations,
+    'he': hebrew.translations
   };
 
   static String get(BuildContext context, String key) {
