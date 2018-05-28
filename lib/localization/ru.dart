@@ -1,7 +1,7 @@
 import 'package:birkon/localization/keys.dart';
 
-Map<String, String> translations = {
+Map<int, String> translations = {
   RUSSIAN: "Русский",
-  TRANSLIATERATION: "Транслитерация",
+  TRANSLITERATION: "Транслитерация",
   HEBREW: "Иврит",
 };

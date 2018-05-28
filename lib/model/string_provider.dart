@@ -8,14 +8,35 @@ class StringProvider {
   final Locale locale;
   final TranslatedPrayer translatedPrayer;
 
+  List<StringWithTitle> _order = new List(3);
+
   StringProvider(BuildContext context, this.translatedPrayer) :
-        this.locale = Localizations.localeOf(context);
+        this.locale = Localizations.localeOf(context)
+  {
+    bool isHebrew = locale.languageCode == "he";
+    _order[0] = isHebrew
+        ? new StringWithTitle(translatedPrayer.hebrew, HEBREW)
+        : new StringWithTitle(translatedPrayer.transliteration, TRANSLITERATION);
+    _order[1] = isHebrew
+        ? new StringWithTitle(translatedPrayer.transliteration, TRANSLITERATION)
+        : new StringWithTitle(translatedPrayer.russian, RUSSIAN);
+    _order[2] = isHebrew
+        ? new StringWithTitle(translatedPrayer.russian, RUSSIAN)
+        : new StringWithTitle(translatedPrayer.hebrew, HEBREW);
+  }
 
-  DirectionalString get primary => translatedPrayer.transliteration;
-  DirectionalString get secondary => translatedPrayer.russian;
-  DirectionalString get ternary => translatedPrayer.hebrew;
+  DirectionalString get primary => _order[0].string;
+  DirectionalString get secondary => _order[1].string;
+  DirectionalString get ternary => _order[2].string;
 
-  String get primaryTitle => TRANSLIATERATION;
-  String get secondaryTitle => RUSSIAN;
-  String get ternaryTitle => HEBREW;
+  int get primaryTitle => _order[0].titleKey;
+  int get secondaryTitle => _order[1].titleKey;
+  int get ternaryTitle => _order[2].titleKey;
+}
+
+class StringWithTitle {
+  final DirectionalString string;
+  final int titleKey;
+
+  StringWithTitle(this.string, this.titleKey);
 }

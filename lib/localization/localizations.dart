@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 
 class AppLocalizations {
 
-  static Map<String, Map<String, String>> _localizedValues = {
+  static Map<String, Map<int, String>> _localizedValues = {
     'ru': russian.translations,
     'he': hebrew.translations
   };
 
-  static String get(BuildContext context, String key) {
+  static String get(BuildContext context, int key) {
     String languageCode = LocaleProvider.getLanguageCode(context);
     return _localizedValues[languageCode][key];
   }

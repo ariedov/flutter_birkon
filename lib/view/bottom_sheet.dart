@@ -42,7 +42,7 @@ class PrayerBottomSheet extends StatelessWidget {
 
 class TranslationTab {
   final DirectionalString string;
-  final String titleKey;
+  final int titleKey;
 
   TranslationTab(this.string, this.titleKey);
 }

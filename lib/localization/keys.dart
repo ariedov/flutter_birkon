@@ -1,3 +1,3 @@
-const String RUSSIAN = "russian";
-const String TRANSLIATERATION = "transliteration";
-const String HEBREW = "hebrew";
+const int RUSSIAN = 0;
+const int TRANSLITERATION = 1;
+const int HEBREW = 2;
