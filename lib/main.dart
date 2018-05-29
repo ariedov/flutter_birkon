@@ -1,6 +1,8 @@
+import 'package:birkon/model/string_provider.dart';
 import 'package:birkon/prayer/prayer_screen.dart';
 import 'package:birkon/model/prayer.dart';
 import 'package:birkon/model/prayer_reader.dart';
+import 'package:birkon/preferences/prefs_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(new MyApp());
@@ -53,7 +55,11 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     if (prayer != null) {
-      return new PrayerScreen(context, prayer);
+      return new PrayerScreen(
+          context,
+          prayer,
+          new StringProvider(context, prayer.title),
+          _moveToPrefs);
     } else if (e != null) {
       return new Container(
           child: new Text(e
@@ -64,5 +70,12 @@ class _MyHomePageState extends State<MyHomePage> {
           height: 10.0,
           child: new CircularProgressIndicator());
     }
+  }
+
+  void _moveToPrefs() {
+    Navigator.push(
+        context,
+        new MaterialPageRoute(builder: (context) => new PrefsScreen())
+    );
   }
 }

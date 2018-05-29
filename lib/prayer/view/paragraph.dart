@@ -30,10 +30,7 @@ class ParagraphState extends State<PrayerParagraph> {
                   alignment: Alignment.bottomRight,
                   child: new RotatedBox(
                     quarterTurns: 1,
-                    child: new Icon(
-                      new IconData(0xe895,
-                          fontFamily: 'MaterialIcons',
-                          matchTextDirection: true),
+                    child: new Icon(Icons.launch,
                       size: 12.0,
                       textDirection: widget.paragraphProvider.primary.direction,
                     ),
