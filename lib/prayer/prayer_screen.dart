@@ -1,7 +1,7 @@
 import 'package:birkon/localization/keys.dart';
 import 'package:birkon/localization/localizations.dart';
 import 'package:birkon/model/prayer.dart';
-import 'package:birkon/model/string_provider.dart';
+import 'package:birkon/model/order_provider.dart';
 import 'package:birkon/prayer/view/bottom_sheet.dart';
 import 'package:birkon/prayer/view/paragraph.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +10,7 @@ class PrayerScreen extends Scaffold {
   final SettingsItemClickListener listener;
 
   PrayerScreen(BuildContext context, Prayer prayer,
-      StringProvider titleProvider, this.listener)
+      OrderProvider titleProvider, this.listener)
       : super(
             appBar: new AppBar(
               title: new Text(titleProvider.primary.text.toUpperCase(),
@@ -18,7 +18,7 @@ class PrayerScreen extends Scaffold {
               actions: <Widget>[
                 new PopupMenuButton<int>(
                   onSelected: (id) {
-                    listener();
+                    listener(titleProvider);
                   },
                   itemBuilder: (BuildContext context) {
                     return new List()
@@ -35,7 +35,7 @@ class PrayerScreen extends Scaffold {
                 itemBuilder: (context, index) {
                   return new PrayerParagraph(
                     paragraphProvider:
-                        new StringProvider(context, prayer.paragraphs[index]),
+                        new OrderProvider(context, prayer.paragraphs[index]),
                     listener: (paragraph) {
                       showModalBottomSheet(
                           context: context,
@@ -51,4 +51,4 @@ class PrayerScreen extends Scaffold {
                 }));
 }
 
-typedef void SettingsItemClickListener();
+typedef void SettingsItemClickListener(OrderProvider provider);

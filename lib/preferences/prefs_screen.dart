@@ -1,16 +1,21 @@
 import 'package:birkon/localization/keys.dart';
 import 'package:birkon/localization/localizations.dart';
+import 'package:birkon/model/order_provider.dart';
 import 'package:birkon/preferences/view/sortable_list_view.dart';
 import 'package:flutter/material.dart';
 
 class PrefsScreen extends StatelessWidget {
 
+  final OrderProvider orderProvider;
+
+  const PrefsScreen({Key key, this.orderProvider}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     List items = new List()
-      ..add("String 1")
-      ..add("String 2")
-      ..add("String 3");
+      ..add(AppLocalizations.get(context, orderProvider.primaryTitle))
+      ..add(AppLocalizations.get(context, orderProvider.secondaryTitle))
+      ..add(AppLocalizations.get(context, orderProvider.ternaryTitle));
 
     return new Scaffold(
       appBar: new AppBar(

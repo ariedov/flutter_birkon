@@ -51,12 +51,6 @@ class SortableListViewState extends State<SortableListView> {
                   );
                 },
               ),
-              onDragStarted: () {
-                Scaffold.of(context).showSnackBar(
-                      new SnackBar(
-                          content: new Text("Drag the row to change places")),
-                    );
-              },
               feedback: new Opacity(
                 opacity: 0.75,
                 child: new SizedBox(

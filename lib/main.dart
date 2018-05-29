@@ -1,4 +1,4 @@
-import 'package:birkon/model/string_provider.dart';
+import 'package:birkon/model/order_provider.dart';
 import 'package:birkon/prayer/prayer_screen.dart';
 import 'package:birkon/model/prayer.dart';
 import 'package:birkon/model/prayer_reader.dart';
@@ -58,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
       return new PrayerScreen(
           context,
           prayer,
-          new StringProvider(context, prayer.title),
+          new OrderProvider(context, prayer.title),
           _moveToPrefs);
     } else if (e != null) {
       return new Container(
@@ -72,10 +72,12 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void _moveToPrefs() {
+  void _moveToPrefs(OrderProvider orderProvider) {
     Navigator.push(
         context,
-        new MaterialPageRoute(builder: (context) => new PrefsScreen())
+        new MaterialPageRoute(builder: (context) => new PrefsScreen(
+            orderProvider: orderProvider
+        ))
     );
   }
 }

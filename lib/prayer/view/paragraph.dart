@@ -1,9 +1,9 @@
-import 'package:birkon/model/string_provider.dart';
+import 'package:birkon/model/order_provider.dart';
 import 'package:birkon/prayer/view/prayer_text.dart';
 import 'package:flutter/material.dart';
 
 class PrayerParagraph extends StatefulWidget {
-  final StringProvider paragraphProvider;
+  final OrderProvider paragraphProvider;
   final ParagraphClickListener listener;
 
   const PrayerParagraph({Key key, this.paragraphProvider, this.listener})
@@ -41,4 +41,4 @@ class ParagraphState extends State<PrayerParagraph> {
   }
 }
 
-typedef void ParagraphClickListener(StringProvider paragraph);
+typedef void ParagraphClickListener(OrderProvider paragraph);

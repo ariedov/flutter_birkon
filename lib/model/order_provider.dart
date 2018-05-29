@@ -3,14 +3,14 @@ import 'package:birkon/dao/translated_prayer.dart';
 import 'package:birkon/localization/keys.dart';
 import 'package:flutter/material.dart';
 
-class StringProvider {
+class OrderProvider {
 
   final Locale locale;
   final TranslatedPrayer translatedPrayer;
 
   List<StringWithTitle> _order = new List(3);
 
-  StringProvider(BuildContext context, this.translatedPrayer) :
+  OrderProvider(BuildContext context, this.translatedPrayer) :
         this.locale = Localizations.localeOf(context)
   {
     bool isHebrew = locale.languageCode == "he";
