@@ -18,6 +18,7 @@ class PrayerParagraph extends StatefulWidget {
 class ParagraphState extends State<PrayerParagraph> {
   @override
   Widget build(BuildContext context) {
+    bool isLtr = widget.paragraph.get(widget.order.primary).direction == TextDirection.ltr;
     return new InkWell(
         onTap: () {
           widget.listener(widget.paragraph);
@@ -25,21 +26,24 @@ class ParagraphState extends State<PrayerParagraph> {
         child: new Padding(
             padding: EdgeInsets.all(16.0),
             child: new Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: isLtr ? CrossAxisAlignment.start : CrossAxisAlignment.end,
               children: <Widget>[
                 new PrayerText(widget.paragraph.get(widget.order.primary)),
-                new Align(
-                  alignment: Alignment.bottomRight,
-                  child: new RotatedBox(
-                    quarterTurns: 1,
-                    child: new Icon(Icons.launch,
-                      size: 12.0,
-                      textDirection: widget.paragraph.get(widget.order.primary).direction,
-                    ),
-                  ),
-                ),
+                _buildDropDownIcon(isLtr)
               ],
             )));
+  }
+
+  Widget _buildDropDownIcon(bool isLtr) {
+    return new Align(
+      alignment: isLtr ? Alignment.bottomRight : Alignment.bottomLeft,
+      child: new RotatedBox(
+        quarterTurns: isLtr ? 1 : 2,
+        child: new Icon(Icons.launch,
+          size: 12.0,
+        ),
+      ),
+    );
   }
 }
 
