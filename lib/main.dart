@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:birkon/list/list_screen.dart';
 import 'package:birkon/model/order/locale_order_provider.dart';
 import 'package:birkon/model/order/order.dart';
 import 'package:birkon/model/order/order_provider.dart';
@@ -55,9 +56,10 @@ class _MyHomePageState extends State<MyHomePage> {
         new OrderProvider(preferencesOrderProvider, localeOrderProvider);
     Future<Order> order = orderProvider.loadOrder();
 
-    return new PrayerScreen(context, prayer, order, () {
-      _moveToPrefs(context, order, preferencesOrderProvider);
-    });
+//    return new PrayerScreen(context, prayer, order, () {
+//      _moveToPrefs(context, order, preferencesOrderProvider);
+//    }
+  return new ListScreen();
   }
 
   void _moveToPrefs(BuildContext context, Future<Order> order,

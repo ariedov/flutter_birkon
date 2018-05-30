@@ -30,6 +30,7 @@ flutter:
 
   assets:
     - assets/prayers/birkat_hamazon.json
+    - assets/graphics/birkat_hamazon.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
