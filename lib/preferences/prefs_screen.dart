@@ -13,9 +13,9 @@ class PrefsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List items = new List()
-      ..add(AppLocalizations.get(context, orderProvider.primaryTitle))
-      ..add(AppLocalizations.get(context, orderProvider.secondaryTitle))
-      ..add(AppLocalizations.get(context, orderProvider.ternaryTitle));
+      ..add(AppLocalizations.get(context, orderProvider.primary))
+      ..add(AppLocalizations.get(context, orderProvider.secondary))
+      ..add(AppLocalizations.get(context, orderProvider.ternary));
 
     return new Scaffold(
       appBar: new AppBar(

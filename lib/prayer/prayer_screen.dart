@@ -10,15 +10,15 @@ class PrayerScreen extends Scaffold {
   final SettingsItemClickListener listener;
 
   PrayerScreen(BuildContext context, Prayer prayer,
-      OrderProvider titleProvider, this.listener)
+      OrderProvider orderProvider, this.listener)
       : super(
             appBar: new AppBar(
-              title: new Text(titleProvider.primary.text.toUpperCase(),
-                  textDirection: titleProvider.primary.direction),
+              title: new Text(prayer.title.get(orderProvider.primary).text.toUpperCase(),
+                  textDirection: prayer.title.get(orderProvider.primary).direction),
               actions: <Widget>[
                 new PopupMenuButton<int>(
                   onSelected: (id) {
-                    listener(titleProvider);
+                    listener(orderProvider);
                   },
                   itemBuilder: (BuildContext context) {
                     return new List()
@@ -34,17 +34,19 @@ class PrayerScreen extends Scaffold {
                 itemCount: prayer.paragraphs.length,
                 itemBuilder: (context, index) {
                   return new PrayerParagraph(
-                    paragraphProvider:
-                        new OrderProvider(context, prayer.paragraphs[index]),
+                    paragraph: prayer.paragraphs[index],
+                    orderProvider: orderProvider,
                     listener: (paragraph) {
                       showModalBottomSheet(
                           context: context,
                           builder: (BuildContext context) {
                             return new PrayerBottomSheet(
-                                left: new TranslationTab(paragraph.secondary,
-                                    paragraph.secondaryTitle),
+                                left: new TranslationTab(
+                                    paragraph.get(orderProvider.secondary),
+                                    orderProvider.secondary),
                                 right: new TranslationTab(
-                                    paragraph.ternary, paragraph.ternaryTitle));
+                                    paragraph.get(orderProvider.ternary),
+                                    orderProvider.ternary));
                           });
                     },
                   );

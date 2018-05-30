@@ -58,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
       return new PrayerScreen(
           context,
           prayer,
-          new OrderProvider(context, prayer.title),
+          new OrderProvider(context),
           _moveToPrefs);
     } else if (e != null) {
       return new Container(
