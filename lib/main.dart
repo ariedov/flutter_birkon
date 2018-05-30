@@ -1,4 +1,9 @@
-import 'package:birkon/model/order_provider.dart';
+import 'dart:async';
+
+import 'package:birkon/model/order/locale_order_provider.dart';
+import 'package:birkon/model/order/order.dart';
+import 'package:birkon/model/order/order_provider.dart';
+import 'package:birkon/model/order/preferences_order_provider.dart';
 import 'package:birkon/prayer/prayer_screen.dart';
 import 'package:birkon/model/prayer.dart';
 import 'package:birkon/model/prayer_reader.dart';
@@ -29,55 +34,41 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  Prayer prayer;
-  dynamic e;
+  Future<Prayer> prayer;
 
   @override
   void initState() {
     super.initState();
-    loadPrayer(context);
-  }
-
-  void loadPrayer(BuildContext context) async {
-    try {
-      PrayerReader prayerReader = new PrayerReader();
-      Prayer prayer = await prayerReader.readPrayer(context);
-      setState(() {
-        this.prayer = prayer;
-      });
-    } catch (e) {
-      setState(() {
-        this.e = e;
-      });
-    }
+    PrayerReader prayerReader = new PrayerReader();
+    setState(() {
+      this.prayer = prayerReader.readPrayer(context);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (prayer != null) {
-      return new PrayerScreen(
-          context,
-          prayer,
-          new OrderProvider(context),
-          _moveToPrefs);
-    } else if (e != null) {
-      return new Container(
-          child: new Text(e
-              .toString()));
-    } else {
-      return new Container(
-          width: 10.0,
-          height: 10.0,
-          child: new CircularProgressIndicator());
-    }
+    LocaleOrderProvider localeOrderProvider = new LocaleOrderProvider(context);
+    PreferencesOrderProvider preferencesOrderProvider =
+        new PreferencesOrderProvider();
+
+    OrderProvider orderProvider =
+        new OrderProvider(preferencesOrderProvider, localeOrderProvider);
+    Future<Order> order = orderProvider.loadOrder();
+
+    return new PrayerScreen(context, prayer, order, () {
+      _moveToPrefs(context, order, preferencesOrderProvider);
+    });
   }
 
-  void _moveToPrefs(OrderProvider orderProvider) {
+  void _moveToPrefs(BuildContext context, Future<Order> order,
+      PreferencesOrderProvider prefsOrderProvider) async {
+    Order initialOrder = await order;
     Navigator.push(
         context,
-        new MaterialPageRoute(builder: (context) => new PrefsScreen(
-            orderProvider: orderProvider
-        ))
-    );
+        new MaterialPageRoute(
+            builder: (context) => new PrefsScreen(
+                  initialOrder: initialOrder,
+                  prefsOrderProvider: prefsOrderProvider,
+                )));
   }
 }
