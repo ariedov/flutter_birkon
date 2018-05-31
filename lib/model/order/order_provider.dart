@@ -1,12 +1,8 @@
 import 'dart:async';
 
-import 'package:birkon/dao/directional_string.dart';
-import 'package:birkon/dao/translated_prayer.dart';
-import 'package:birkon/localization/keys.dart';
 import 'package:birkon/model/order/locale_order_provider.dart';
 import 'package:birkon/model/order/order.dart';
 import 'package:birkon/model/order/preferences_order_provider.dart';
-import 'package:flutter/material.dart';
 
 class OrderProvider {
 

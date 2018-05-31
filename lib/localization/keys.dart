@@ -1,4 +1,8 @@
-const int RUSSIAN = 0;
-const int TRANSLITERATION = 1;
-const int HEBREW = 2;
-const int SETTINGS = 3;
+const int APP_NAME = 0;
+
+const int RUSSIAN = 1;
+const int TRANSLITERATION = 2;
+const int HEBREW = 3;
+const int SETTINGS = 4;
+
+const int BIRKAT_HA_MAZON = 5;
