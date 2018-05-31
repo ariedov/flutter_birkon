@@ -20,8 +20,6 @@ class PrayerContent extends StatelessWidget {
         body: new CustomScrollView(
       slivers: <Widget>[
         new SliverAppBar(
-          floating: true,
-          pinned: true,
           expandedHeight: 150.0,
           title: new Text(prayer.title.get(order.primary).text.toUpperCase(),
               textDirection: prayer.title.get(order.primary).direction),
