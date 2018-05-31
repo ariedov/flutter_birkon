@@ -18,7 +18,7 @@ class PrefsScreen extends StatelessWidget {
 
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text(AppLocalizations.get(context, SETTINGS)),
+        title: new Text(AppLocalizations.get(context, ORDER)),
       ),
       body: new DragAndDropList<int>(
         items,

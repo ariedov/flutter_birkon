@@ -6,5 +6,6 @@ Map<int, String> translations = {
   TRANSLITERATION: "Транслитерация",
   HEBREW: "Иврит",
   SETTINGS: "Настройки",
+  ORDER: "Порядок",
   BIRKAT_HA_MAZON: "Благословение после еды",
 };

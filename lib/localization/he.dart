@@ -6,5 +6,6 @@ Map<int, String> translations = {
   TRANSLITERATION: "תעתיק",
   HEBREW: "עברית",
   SETTINGS: "הגדרות",
+  ORDER: "להזמין",
   BIRKAT_HA_MAZON: "ברכת המזון",
 };
