@@ -7,37 +7,48 @@ import 'package:birkon/prayer/view/paragraph.dart';
 import 'package:flutter/material.dart';
 
 class PrayerContent extends StatelessWidget {
-
   final Prayer prayer;
   final Order order;
   final OnMenuClickListener listener;
 
-  const PrayerContent({Key key, this.prayer, this.order, this.listener}) : super(key: key);
+  const PrayerContent({Key key, this.prayer, this.order, this.listener})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        appBar: new AppBar(
+        body: new CustomScrollView(
+      slivers: <Widget>[
+        new SliverAppBar(
+          floating: true,
+          pinned: true,
+          expandedHeight: 150.0,
           title: new Text(prayer.title.get(order.primary).text.toUpperCase(),
               textDirection: prayer.title.get(order.primary).direction),
+          flexibleSpace: new FlexibleSpaceBar(
+            background: new Image(
+                image: new AssetImage('assets/graphics/birkat_hamazon.jpeg'),
+                fit: BoxFit.cover,
+            ),
+          ),
           actions: <Widget>[
             new PopupMenuButton<int>(
               onSelected: (id) {
                 listener(id);
               },
               itemBuilder: (BuildContext context) {
-                return new List()
-                  ..add(new PopupMenuItem(
+                return [
+                  new PopupMenuItem(
                       value: 1,
-                      child:
-                      new Text(AppLocalizations.get(context, SETTINGS))));
+                      child: new Text(AppLocalizations.get(context, SETTINGS)))
+                ];
               },
             ),
           ],
         ),
-        body: new ListView.builder(
-            itemCount: prayer.paragraphs.length,
-            itemBuilder: (context, index) {
+        new SliverList(
+          delegate: new SliverChildBuilderDelegate(
+            (context, index) {
               return new PrayerParagraph(
                 paragraph: prayer.paragraphs[index],
                 order: order,
@@ -54,7 +65,12 @@ class PrayerContent extends StatelessWidget {
                       });
                 },
               );
-            }));
+            },
+            childCount: prayer.paragraphs.length,
+          ),
+        )
+      ],
+    ));
   }
 }
 
