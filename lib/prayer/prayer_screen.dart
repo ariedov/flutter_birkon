@@ -12,8 +12,9 @@ import 'package:flutter/material.dart';
 
 class PrayerScreen extends StatelessWidget {
   final int prayerId;
+  final String image;
 
-  PrayerScreen(this.prayerId);
+  PrayerScreen(this.prayerId, this.image);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class PrayerScreen extends StatelessWidget {
     OrderProvider orderProvider =
         new OrderProvider(preferencesOrderProvider, localeOrderProvider);
 
-    Future<Prayer> prayer = prayerReader.readPrayer(context);
+    Future<Prayer> prayer = prayerReader.readPrayer(context, prayerId);
     Future<Order> order = orderProvider.loadOrder();
 
     return new FutureBuilder(
@@ -38,6 +39,7 @@ class PrayerScreen extends StatelessWidget {
                 return new Text('Error: ${snapshot.error}');
               else
                 return new PrayerContent(
+                    image: image,
                     order: snapshot.data.order,
                     prayer: snapshot.data.prayer,
                     listener: (int id) {

@@ -1,3 +1,4 @@
+import 'package:birkon/list/view/list_item.dart';
 import 'package:birkon/localization/keys.dart';
 import 'package:birkon/localization/localizations.dart';
 import 'package:birkon/prayer/prayer_screen.dart';
@@ -9,46 +10,30 @@ class ListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(AppLocalizations.get(context, APP_NAME)),
       ),
       body: new ListView(
         children: <Widget>[
-          new Card(
-            child: new InkWell(
-              onTap: () {
-                _moveToPrayer(context, BIRKAT_HA_MAZON);
-              },
-              child: new Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  new Image(
-                      image: new AssetImage(
-                          'assets/graphics/birkat_hamazon.jpeg')),
-                  new Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child:
-                        new Text(AppLocalizations.get(context, BIRKAT_HA_MAZON),
-                            style: new TextStyle(
-                              fontSize: 22.0,
-                            )),
-                  )
-                ],
-              ),
-            ),
-          ),
+          new ListItem(BIRKAT_HA_MAZON, 'assets/graphics/birkat_hamazon.jpeg',
+                  (prayerId, image) {
+                    _moveToPrayer(context, prayerId, image);
+              }),
+          new ListItem(SHMA_ISRAEL, 'assets/graphics/shma_israel.jpg',
+                  (prayerId, image) {
+                    _moveToPrayer(context, prayerId, image);
+              })
         ],
       ),
     );
   }
 
-  void _moveToPrayer(BuildContext context, int prayerId) {
+  void _moveToPrayer(BuildContext context, int prayerId, String image) {
     Navigator.push(
         context,
         new MaterialPageRoute(
-            builder: (context) => new PrayerScreen(prayerId)));
+            builder: (context) => new PrayerScreen(prayerId, image)));
   }
 }
 

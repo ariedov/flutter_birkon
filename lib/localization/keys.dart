@@ -7,4 +7,5 @@ const int SETTINGS = 4;
 const int ORDER = 5;
 
 const int BIRKAT_HA_MAZON = 100;
+const int SHMA_ISRAEL = 101;
 

@@ -8,4 +8,5 @@ Map<int, String> translations = {
   SETTINGS: "Настройки",
   ORDER: "Порядок",
   BIRKAT_HA_MAZON: "Благословение после еды",
+  SHMA_ISRAEL: "Шма Исраэль",
 };

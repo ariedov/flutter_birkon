@@ -3,15 +3,16 @@ import 'dart:convert';
 
 import 'package:birkon/dao/directional_string.dart';
 import 'package:birkon/dao/translated_prayer.dart';
+import 'package:birkon/localization/keys.dart';
 import 'package:birkon/model/prayer.dart';
 import 'package:flutter/material.dart';
 
 class PrayerReader {
 
-  Future<Prayer> readPrayer(BuildContext context) async {
+  Future<Prayer> readPrayer(BuildContext context, int prayerId) async {
     String prayer = await DefaultAssetBundle
         .of(context)
-        .loadString("assets/prayers/birkat_hamazon.json");
+        .loadString(_getPrayerPath(prayerId));
     Map<String, dynamic> decodedPrayer = json.decode(prayer);
 
     TranslatedPrayer title =
@@ -29,5 +30,16 @@ class PrayerReader {
     }
 
     return new Prayer(title, paragraphs);
+  }
+
+  String _getPrayerPath(int prayerId) {
+    switch (prayerId) {
+      case BIRKAT_HA_MAZON:
+        return "assets/prayers/birkat_hamazon.json";
+      case SHMA_ISRAEL:
+        return "assets/prayers/shma_israel.json";
+      default:
+        return null;
+    }
   }
 }

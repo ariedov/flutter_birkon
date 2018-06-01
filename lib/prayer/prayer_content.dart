@@ -7,11 +7,13 @@ import 'package:birkon/prayer/view/paragraph.dart';
 import 'package:flutter/material.dart';
 
 class PrayerContent extends StatelessWidget {
+
+  final String image;
   final Prayer prayer;
   final Order order;
   final OnMenuClickListener listener;
 
-  const PrayerContent({Key key, this.prayer, this.order, this.listener})
+  const PrayerContent({Key key, this.image, this.prayer, this.order, this.listener})
       : super(key: key);
 
   @override
@@ -25,7 +27,7 @@ class PrayerContent extends StatelessWidget {
               textDirection: prayer.title.get(order.primary).direction),
           flexibleSpace: new FlexibleSpaceBar(
             background: new Image(
-                image: new AssetImage('assets/graphics/birkat_hamazon.jpeg'),
+                image: new AssetImage(this.image),
                 fit: BoxFit.cover,
             ),
           ),
