@@ -1,4 +1,4 @@
-package com.example.birkon;
+package com.dleibovych.siddur;
 
 import android.os.Bundle;
 
