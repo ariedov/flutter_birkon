@@ -16,10 +16,6 @@ class ListScreen extends StatelessWidget {
       ),
       body: new ListView(
         children: <Widget>[
-          new ListItem(BIRKAT_HA_MAZON, 'assets/graphics/birkat_hamazon.jpeg',
-                  (prayerId, image) {
-                    _moveToPrayer(context, prayerId, image);
-              }),
           new ListItem(SHMA_ISRAEL, 'assets/graphics/shma_israel.jpg',
                   (prayerId, image) {
                     _moveToPrayer(context, prayerId, image);

@@ -29,8 +29,6 @@ flutter:
   #  - images/a_dot_ham.jpeg
 
   assets:
-    - assets/prayers/birkat_hamazon.json
-    - assets/graphics/birkat_hamazon.jpeg
     - assets/prayers/shma_israel.json
     - assets/graphics/shma_israel.jpg
 
