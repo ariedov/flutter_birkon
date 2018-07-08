@@ -1,0 +1,3 @@
+[submodule "flutter_list_drag_and_drop"]
+	path = flutter_list_drag_and_drop
+	url = https://github.com/ariedov/flutter_list_drag_and_drop
