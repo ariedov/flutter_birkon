@@ -30,12 +30,15 @@ class PrayerContent extends StatelessWidget {
                         image: AssetImage("assets/graphics/shma.png"),
                         fit: BoxFit.none,
                       ),
-                      SizedBox(height: 35.0),
+                      SizedBox(height: 32.0),
                       Text(
                         prayer.title.get(order.primary).text.toUpperCase(),
                         textDirection:
                             prayer.title.get(order.primary).direction,
-                        style: TextStyle(fontSize: 18.0, color: Colors.white),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24.0,
+                            color: Colors.white),
                       ),
                     ]),
               ),
@@ -70,11 +73,11 @@ class PrayerContent extends StatelessWidget {
 }
 
 class CircleRevealClipper extends CustomClipper<Rect> {
-
   @override
   Rect getClip(Size size) {
     // todo: do some math
-    return new Rect.fromLTWH(-size.width / 2, -550.0, size.width * 2, size.width * 2);
+    return new Rect.fromLTWH(
+        -size.width / 2, -550.0, size.width * 2, size.width * 2);
   }
 
   @override
