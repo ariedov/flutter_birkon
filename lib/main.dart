@@ -1,4 +1,5 @@
-import 'package:birkon/list/list_screen.dart';
+import 'package:birkon/localization/keys.dart';
+import 'package:birkon/prayer/prayer_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(new MyApp());
@@ -27,6 +28,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return new ListScreen();
+    return PrayerScreen(SHMA_ISRAEL);
   }
 }

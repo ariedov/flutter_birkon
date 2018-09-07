@@ -1,12 +1,13 @@
 name: birkon
 description: A new Flutter project.
 
+environment:
+  sdk: ">=2.0.0-dev.58.0 <3.0.0"
+
 dependencies:
   flutter:
     sdk: flutter
   shared_preferences: "0.4.1"
-  flutter_list_drag_and_drop: 
-    path: flutter_list_drag_and_drop
 
 dev_dependencies:
   flutter_test:
@@ -31,7 +32,7 @@ flutter:
 
   assets:
     - assets/prayers/shma_israel.json
-    - assets/graphics/shma_israel.jpg
+    - assets/graphics/shma.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

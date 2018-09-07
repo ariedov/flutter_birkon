@@ -7,14 +7,12 @@ import 'package:birkon/model/order/preferences_order_provider.dart';
 import 'package:birkon/model/prayer.dart';
 import 'package:birkon/model/prayer_reader.dart';
 import 'package:birkon/prayer/prayer_content.dart';
-import 'package:birkon/preferences/prefs_screen.dart';
 import 'package:flutter/material.dart';
 
 class PrayerScreen extends StatelessWidget {
   final int prayerId;
-  final String image;
 
-  PrayerScreen(this.prayerId, this.image);
+  PrayerScreen(this.prayerId);
 
   @override
   Widget build(BuildContext context) {
@@ -33,36 +31,25 @@ class PrayerScreen extends StatelessWidget {
         builder: (BuildContext context, AsyncSnapshot<Data> snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
-              return const CircularProgressIndicator();
+              return Container(
+                  alignment: Alignment.center,
+                  child: SizedBox.fromSize(
+                    child: CircularProgressIndicator(),
+                    size: Size(32.0, 32.0),
+                  ));
             default:
               if (snapshot.hasError)
                 return new Text('Error: ${snapshot.error}');
               else
                 return new PrayerContent(
-                    image: image,
                     order: snapshot.data.order,
-                    prayer: snapshot.data.prayer,
-                    listener: (int id) {
-                      _moveToPrefs(context, snapshot.data.order,
-                          preferencesOrderProvider);
-                    });
+                    prayer: snapshot.data.prayer);
           }
         });
   }
 
   Future<Data> _loadData(Future<Prayer> prayer, Future<Order> order) async {
     return new Data(await prayer, await order);
-  }
-
-  void _moveToPrefs(BuildContext context, Order order,
-      PreferencesOrderProvider prefsOrderProvider) async {
-    Navigator.push(
-        context,
-        new MaterialPageRoute(
-            builder: (context) => new PrefsScreen(
-                  initialOrder: order,
-                  prefsOrderProvider: prefsOrderProvider,
-                )));
   }
 }
 

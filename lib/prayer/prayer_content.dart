@@ -1,5 +1,3 @@
-import 'package:birkon/localization/keys.dart';
-import 'package:birkon/localization/localizations.dart';
 import 'package:birkon/model/order/order.dart';
 import 'package:birkon/model/prayer.dart';
 import 'package:birkon/prayer/view/bottom_sheet.dart';
@@ -7,60 +5,57 @@ import 'package:birkon/prayer/view/paragraph.dart';
 import 'package:flutter/material.dart';
 
 class PrayerContent extends StatelessWidget {
-
-  final String image;
   final Prayer prayer;
   final Order order;
-  final OnMenuClickListener listener;
 
-  const PrayerContent({Key key, this.image, this.prayer, this.order, this.listener})
-      : super(key: key);
+  const PrayerContent({Key key, this.prayer, this.order}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-        body: new CustomScrollView(
+    return Scaffold(
+        body: CustomScrollView(
       slivers: <Widget>[
-        new SliverAppBar(
+        SliverAppBar(
+          backgroundColor: Colors.white,
           expandedHeight: 250.0,
-          title: new Text(prayer.title.get(order.primary).text.toUpperCase(),
-              textDirection: prayer.title.get(order.primary).direction),
-          flexibleSpace: new FlexibleSpaceBar(
-            background: new Image(
-                image: new AssetImage(this.image),
-                fit: BoxFit.cover,
+          flexibleSpace: FlexibleSpaceBar(
+            background: ClipOval(
+              clipper: CircleRevealClipper(),
+              child: Container(
+                decoration: BoxDecoration(color: Colors.blue),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Image(
+                        image: AssetImage("assets/graphics/shma.png"),
+                        fit: BoxFit.none,
+                      ),
+                      SizedBox(height: 35.0),
+                      Text(
+                        prayer.title.get(order.primary).text.toUpperCase(),
+                        textDirection:
+                            prayer.title.get(order.primary).direction,
+                        style: TextStyle(fontSize: 18.0, color: Colors.white),
+                      ),
+                    ]),
+              ),
             ),
           ),
-          actions: <Widget>[
-            new PopupMenuButton<int>(
-              onSelected: (id) {
-                listener(id);
-              },
-              itemBuilder: (BuildContext context) {
-                return [
-                  new PopupMenuItem(
-                      value: 1,
-                      child: new Text(AppLocalizations.get(context, SETTINGS)))
-                ];
-              },
-            ),
-          ],
         ),
-        new SliverList(
-          delegate: new SliverChildBuilderDelegate(
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
             (context, index) {
-              return new PrayerParagraph(
+              return PrayerParagraph(
                 paragraph: prayer.paragraphs[index],
                 order: order,
                 listener: (paragraph) {
                   showModalBottomSheet(
                       context: context,
                       builder: (BuildContext context) {
-                        return new PrayerBottomSheet(
-                            left: new TranslationTab(
-                                paragraph.get(order.secondary),
+                        return PrayerBottomSheet(
+                            left: TranslationTab(paragraph.get(order.secondary),
                                 order.secondary),
-                            right: new TranslationTab(
+                            right: TranslationTab(
                                 paragraph.get(order.ternary), order.ternary));
                       });
                 },
@@ -71,6 +66,20 @@ class PrayerContent extends StatelessWidget {
         )
       ],
     ));
+  }
+}
+
+class CircleRevealClipper extends CustomClipper<Rect> {
+
+  @override
+  Rect getClip(Size size) {
+    // todo: do some math
+    return new Rect.fromLTWH(-size.width / 2, -550.0, size.width * 2, size.width * 2);
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Rect> oldClipper) {
+    return true;
   }
 }
 
