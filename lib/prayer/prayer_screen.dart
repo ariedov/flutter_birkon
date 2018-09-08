@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:birkon/chooser/chooser.dart';
 import 'package:birkon/model/order/locale_order_provider.dart';
 import 'package:birkon/model/order/order.dart';
 import 'package:birkon/model/order/order_provider.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 
 class PrayerScreen extends StatelessWidget {
   final int prayerId;
+  final GlobalKey headerKey = new GlobalKey();
 
   PrayerScreen(this.prayerId);
 
@@ -39,11 +41,20 @@ class PrayerScreen extends StatelessWidget {
                   ));
             default:
               if (snapshot.hasError)
-                return new Text('Error: ${snapshot.error}');
+                return Text('Error: ${snapshot.error}');
               else
-                return new PrayerContent(
-                    order: snapshot.data.order,
-                    prayer: snapshot.data.prayer);
+                return Stack(
+                  children: <Widget>[
+                    PrayerContent(
+                        headerKey: headerKey,
+                        order: snapshot.data.order,
+                        prayer: snapshot.data.prayer),
+                    Chooser( 
+                        headerKey: headerKey,
+                        order: snapshot.data.order,
+                        prayer: snapshot.data.prayer),
+                  ],
+                );
           }
         });
   }
