@@ -31,6 +31,10 @@ class _ChooserState extends State<Chooser> with TickerProviderStateMixin {
 
   AnimationController collapseAnimation;
 
+  GlobalKey top = GlobalKey();
+  GlobalKey secondary = GlobalKey();
+  GlobalKey ternary = GlobalKey();
+
   // buttons tween
   Tween<Offset> firstOffsetTween;
   Tween<Offset> secondOffsetTween;
@@ -49,10 +53,9 @@ class _ChooserState extends State<Chooser> with TickerProviderStateMixin {
         AnimationController(vsync: this, duration: Duration(milliseconds: 300))
           ..addListener(() {
             setState(() {
-              state.firstOffset = _evaluateCurvedOffset(firstOffsetTween, 0.2);
-              state.secondOffset =
-                  _evaluateCurvedOffset(secondOffsetTween, 0.4);
-              state.thirdOffset = _evaluateCurvedOffset(thirdOffsetTween, 0.6);
+              state.firstOffset = firstOffsetTween.evaluate(collapseAnimation);
+              state.secondOffset = secondOffsetTween.evaluate(collapseAnimation);
+              state.thirdOffset = thirdOffsetTween.evaluate(collapseAnimation);
 
               state.height = heightTween.evaluate(collapseAnimation);
               state.corners = cornersTween.evaluate(collapseAnimation);
@@ -69,9 +72,10 @@ class _ChooserState extends State<Chooser> with TickerProviderStateMixin {
     super.initState();
   }
 
-  _evaluateCurvedOffset(Tween<Offset> tween, double intervalStart) {
-    return tween.evaluate(CurvedAnimation(
-        parent: collapseAnimation, curve: Interval(intervalStart, 1.0)));
+  @override
+  void reassemble() {
+    state = ChooserState();
+    super.reassemble();
   }
 
   @override
@@ -100,11 +104,11 @@ class _ChooserState extends State<Chooser> with TickerProviderStateMixin {
                       order: widget.order,
                     ),
                     SizedBox(height: 16.0),
-                    _buildButton(widget.order.primary, state.firstOffset),
+                    _buildButton(top, widget.order.primary, state.firstOffset),
                     SizedBox(height: 16.0),
-                    _buildButton(widget.order.secondary, state.secondOffset),
+                    _buildButton(secondary, widget.order.secondary, state.secondOffset),
                     SizedBox(height: 16.0),
-                    _buildButton(widget.order.ternary, state.thirdOffset),
+                    _buildButton(ternary, widget.order.ternary, state.thirdOffset),
                   ],
                 ),
               ),
@@ -115,9 +119,10 @@ class _ChooserState extends State<Chooser> with TickerProviderStateMixin {
     );
   }
 
-  _buildButton(int translationId, Offset offset) {
+  _buildButton(Key key, int translationId, Offset offset) {
     return Transform(
       child: HeaderButton(
+        key: key,
         text: AppLocalizations.get(context, translationId),
         onPressed: () {
           _startButtonsFadeAnimation(translationId);
@@ -130,13 +135,21 @@ class _ChooserState extends State<Chooser> with TickerProviderStateMixin {
   _startButtonsFadeAnimation(int translationId) {
     this.selectedOrderItem = selectedOrderItem;
 
-    firstOffsetTween = Tween<Offset>(
+    firstOffsetTween = translationId == widget.order.primary
+    ? Tween<Offset>(begin: state.firstOffset, end: state.firstOffset)
+    : Tween<Offset>(
         begin: state.firstOffset,
         end: Offset(2 * context.size.width, state.firstOffset.dy));
-    secondOffsetTween = Tween<Offset>(
+
+    secondOffsetTween = translationId == widget.order.secondary 
+    ? Tween<Offset>(begin: state.secondOffset, end: Offset(0.0, -(secondary.currentContext.size.height + 16.0)))
+    : Tween<Offset>(
         begin: state.secondOffset,
         end: Offset(2 * context.size.width, state.secondOffset.dy));
-    thirdOffsetTween = Tween<Offset>(
+
+    thirdOffsetTween = translationId == widget.order.ternary 
+    ? Tween<Offset>(begin: state.secondOffset, end: Offset(0.0, -((ternary.currentContext.size.height + 16.0) * 2)))
+    : Tween<Offset>(
         begin: state.thirdOffset,
         end: Offset(2 * context.size.width, state.thirdOffset.dy));
 
