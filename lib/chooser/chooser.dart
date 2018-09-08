@@ -10,14 +10,14 @@ class Chooser extends StatefulWidget {
   final Order order;
   final GlobalKey headerKey;
 
-  final ChoiceSelectedListener choiceSelectedListener;
+  final Sink<int> languageSink;
 
   const Chooser(
       {Key key,
       this.prayer,
       this.order,
       this.headerKey,
-      this.choiceSelectedListener})
+      this.languageSink})
       : super(key: key);
 
   @override
@@ -41,6 +41,8 @@ class _ChooserState extends State<Chooser> with TickerProviderStateMixin {
   Tween<double> heightTween;
   ColorTween backgroundTween;
 
+  int selectedOrderItem;
+
   @override
   void initState() {
     collapseAnimation =
@@ -59,7 +61,9 @@ class _ChooserState extends State<Chooser> with TickerProviderStateMixin {
             });
           })
           ..addStatusListener((status) {
-            if (status == AnimationStatus.completed) {}
+            if (status == AnimationStatus.completed) {
+              widget.languageSink.add(selectedOrderItem);
+            }
           });
 
     super.initState();
@@ -124,6 +128,8 @@ class _ChooserState extends State<Chooser> with TickerProviderStateMixin {
   }
 
   _startButtonsFadeAnimation(int translationId) {
+    this.selectedOrderItem = selectedOrderItem;
+
     firstOffsetTween = Tween<Offset>(
         begin: state.firstOffset,
         end: Offset(2 * context.size.width, state.firstOffset.dy));

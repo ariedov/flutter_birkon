@@ -10,24 +10,61 @@ import 'package:birkon/model/prayer_reader.dart';
 import 'package:birkon/prayer/prayer_content.dart';
 import 'package:flutter/material.dart';
 
-class PrayerScreen extends StatelessWidget {
+class PrayerScreen extends StatefulWidget {
   final int prayerId;
-  final GlobalKey headerKey = new GlobalKey();
 
   PrayerScreen(this.prayerId);
 
   @override
+  State<StatefulWidget> createState() => _PrayerScreenState();
+}
+
+class _PrayerScreenState extends State<PrayerScreen> {
+  final GlobalKey headerKey = new GlobalKey();
+
+  StreamController<int> languageSelectorStream;
+  PrayerScreenViewModel viewModel = PrayerScreenViewModel();
+
+  Data data;
+
+  @override
+  void initState() {
+    languageSelectorStream = StreamController<int>();
+
+    languageSelectorStream.stream.listen((value) {
+      setState(() {
+        viewModel.displayOverlay = false;
+      });
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    languageSelectorStream.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (data == null) {
+      return _loadPrayer(context);
+    }
+
+    return _buildContent(data);
+  }
+
+  FutureBuilder<Data> _loadPrayer(BuildContext context) {
     PrayerReader prayerReader = new PrayerReader();
     LocaleOrderProvider localeOrderProvider = new LocaleOrderProvider(context);
     PreferencesOrderProvider preferencesOrderProvider =
         new PreferencesOrderProvider();
     OrderProvider orderProvider =
         new OrderProvider(preferencesOrderProvider, localeOrderProvider);
-
-    Future<Prayer> prayer = prayerReader.readPrayer(context, prayerId);
+    
+    Future<Prayer> prayer = prayerReader.readPrayer(context, widget.prayerId);
     Future<Order> order = orderProvider.loadOrder();
-
+    
     return new FutureBuilder(
         future: _loadData(prayer, order),
         builder: (BuildContext context, AsyncSnapshot<Data> snapshot) {
@@ -43,25 +80,45 @@ class PrayerScreen extends StatelessWidget {
               if (snapshot.hasError)
                 return Text('Error: ${snapshot.error}');
               else
-                return Stack(
-                  children: <Widget>[
-                    PrayerContent(
-                        headerKey: headerKey,
-                        order: snapshot.data.order,
-                        prayer: snapshot.data.prayer),
-                    Chooser( 
-                        headerKey: headerKey,
-                        order: snapshot.data.order,
-                        prayer: snapshot.data.prayer),
-                  ],
-                );
+                return _buildContent(snapshot.data);
           }
         });
+  }
+
+  Stack _buildContent(Data data) {
+    this.data = data;
+
+    return Stack(
+      children: <Widget>[
+        PrayerContent(
+            headerKey: headerKey,
+            order: data.order,
+            prayer: data.prayer),
+        _buildOverlay(data),
+      ],
+    );
+  }
+
+  _buildOverlay(Data data) {
+    if (viewModel.displayOverlay) {
+      return Chooser(
+        headerKey: headerKey,
+        order: data.order,
+        prayer: data.prayer,
+        languageSink: languageSelectorStream,
+      );
+    }
+
+    return SizedBox();
   }
 
   Future<Data> _loadData(Future<Prayer> prayer, Future<Order> order) async {
     return new Data(await prayer, await order);
   }
+}
+
+class PrayerScreenViewModel {
+  bool displayOverlay = true;
 }
 
 class Data {
