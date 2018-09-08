@@ -101,7 +101,7 @@ class _ChooserState extends State<Chooser> with TickerProviderStateMixin {
                   children: <Widget>[
                     Header(
                       prayer: widget.prayer,
-                      order: widget.order,
+                      languageCode: widget.order.primary,
                     ),
                     SizedBox(height: 16.0),
                     _buildButton(top, widget.order.primary, state.firstOffset),
@@ -133,7 +133,7 @@ class _ChooserState extends State<Chooser> with TickerProviderStateMixin {
   }
 
   _startButtonsFadeAnimation(int translationId) {
-    this.selectedOrderItem = selectedOrderItem;
+    this.selectedOrderItem = translationId;
 
     firstOffsetTween = translationId == widget.order.primary
     ? Tween<Offset>(begin: state.firstOffset, end: state.firstOffset)

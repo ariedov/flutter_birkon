@@ -1,14 +1,13 @@
 import 'package:birkon/dao/translated_prayer.dart';
-import 'package:birkon/model/order/order.dart';
 import 'package:birkon/prayer/view/prayer_text.dart';
 import 'package:flutter/material.dart';
 
 class PrayerParagraph extends StatefulWidget {
   final TranslatedPrayer paragraph;
-  final Order order;
+  final int languageCode;
   final ParagraphClickListener listener;
 
-  const PrayerParagraph({Key key, this.paragraph, this.order, this.listener})
+  const PrayerParagraph({Key key, this.paragraph, this.languageCode, this.listener})
       : super(key: key);
 
   @override
@@ -18,7 +17,7 @@ class PrayerParagraph extends StatefulWidget {
 class ParagraphState extends State<PrayerParagraph> {
   @override
   Widget build(BuildContext context) {
-    bool isLtr = widget.paragraph.get(widget.order.primary).direction == TextDirection.ltr;
+    bool isLtr = widget.paragraph.get(widget.languageCode).direction == TextDirection.ltr;
     return new InkWell(
         onTap: () {
           widget.listener(widget.paragraph);
@@ -28,7 +27,7 @@ class ParagraphState extends State<PrayerParagraph> {
             child: new Column(
               crossAxisAlignment: isLtr ? CrossAxisAlignment.start : CrossAxisAlignment.end,
               children: <Widget>[
-                new PrayerText(widget.paragraph.get(widget.order.primary)),
+                new PrayerText(widget.paragraph.get(widget.languageCode)),
                 _buildDropDownIcon(isLtr)
               ],
             )));

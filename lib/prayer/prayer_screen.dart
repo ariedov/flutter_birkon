@@ -33,6 +33,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
 
     languageSelectorStream.stream.listen((value) {
       setState(() {
+        data = data.copyWith(languageId: value);
         viewModel.displayOverlay = false;
       });
     });
@@ -92,7 +93,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
       children: <Widget>[
         PrayerContent(
             headerKey: headerKey,
-            order: data.order,
+            languageId: data.languageId,
             prayer: data.prayer),
         _buildOverlay(data),
       ],
@@ -113,7 +114,8 @@ class _PrayerScreenState extends State<PrayerScreen> {
   }
 
   Future<Data> _loadData(Future<Prayer> prayer, Future<Order> order) async {
-    return new Data(await prayer, await order);
+    final syncOrder = await order;
+    return new Data(await prayer, syncOrder, syncOrder.primary);
   }
 }
 
@@ -124,8 +126,13 @@ class PrayerScreenViewModel {
 class Data {
   final Prayer prayer;
   final Order order;
+  final int languageId;
 
-  Data(this.prayer, this.order);
+  Data(this.prayer, this.order, this.languageId);
+
+  copyWith({int languageId}) {
+    return Data(this.prayer, this.order, languageId);
+  }
 }
 
 typedef void SettingsItemClickListener();
