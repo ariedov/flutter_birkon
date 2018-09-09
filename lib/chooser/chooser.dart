@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:birkon/header/header.dart';
 import 'package:birkon/header/header_button.dart';
+import 'package:birkon/language.dart';
 import 'package:birkon/localization/localizations.dart';
 import 'package:birkon/model/order/order.dart';
 import 'package:birkon/model/prayer.dart';
@@ -10,14 +13,14 @@ class Chooser extends StatefulWidget {
   final Order order;
   final GlobalKey headerKey;
 
-  final Sink<int> languageSink;
+  final StreamController<LanguageUpdateEvent> languageStreamController;
 
   const Chooser(
       {Key key,
       this.prayer,
       this.order,
       this.headerKey,
-      this.languageSink})
+      this.languageStreamController})
       : super(key: key);
 
   @override
@@ -45,7 +48,7 @@ class _ChooserState extends State<Chooser> with TickerProviderStateMixin {
   Tween<double> heightTween;
   ColorTween backgroundTween;
 
-  int selectedOrderItem;
+  int selectedLanguageId;
 
   @override
   void initState() {
@@ -65,7 +68,7 @@ class _ChooserState extends State<Chooser> with TickerProviderStateMixin {
           })
           ..addStatusListener((status) {
             if (status == AnimationStatus.completed) {
-              widget.languageSink.add(selectedOrderItem);
+              widget.languageStreamController.add(LanguageUpdateEvent.finished(selectedLanguageId));
             }
           });
 
@@ -102,6 +105,7 @@ class _ChooserState extends State<Chooser> with TickerProviderStateMixin {
                     Header(
                       prayer: widget.prayer,
                       languageCode: widget.order.primary,
+                      languageStream: widget.languageStreamController.stream,
                     ),
                     SizedBox(height: 16.0),
                     _buildButton(top, widget.order.primary, state.firstOffset),
@@ -133,7 +137,8 @@ class _ChooserState extends State<Chooser> with TickerProviderStateMixin {
   }
 
   _startButtonsFadeAnimation(int translationId) {
-    this.selectedOrderItem = translationId;
+    this.selectedLanguageId = translationId;
+    widget.languageStreamController.add(LanguageUpdateEvent.started(translationId));
 
     firstOffsetTween = translationId == widget.order.primary
     ? Tween<Offset>(begin: state.firstOffset, end: state.firstOffset)

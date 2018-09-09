@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:birkon/header/header.dart';
 import 'package:birkon/header/header_button.dart';
+import 'package:birkon/language.dart';
 import 'package:birkon/localization/localizations.dart';
 import 'package:birkon/model/prayer.dart';
 import 'package:birkon/prayer/view/paragraph.dart';
@@ -8,9 +11,11 @@ import 'package:flutter/material.dart';
 class PrayerContent extends StatelessWidget {
   final Prayer prayer;
   final int languageId;
-  final GlobalKey headerKey;
 
-  const PrayerContent({Key key, this.prayer, this.languageId, this.headerKey})
+  final GlobalKey headerKey;
+  final Stream<LanguageUpdateEvent> languageStream;
+
+  const PrayerContent({Key key, this.prayer, this.languageId, this.headerKey, this.languageStream})
       : super(key: key);
 
   @override
@@ -26,7 +31,7 @@ class PrayerContent extends StatelessWidget {
               key: headerKey,
               decoration: BoxDecoration(color: Colors.blue),
               child: Column(children: <Widget>[
-                Header(prayer: prayer, languageCode: languageId),
+                Header(prayer: prayer, languageCode: languageId, languageStream: languageStream,),
                 SizedBox(height: 16.0),
                 HeaderButton(
                   text: AppLocalizations.get(context, languageId),

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:birkon/chooser/chooser.dart';
+import 'package:birkon/language.dart';
 import 'package:birkon/model/order/locale_order_provider.dart';
 import 'package:birkon/model/order/order.dart';
 import 'package:birkon/model/order/order_provider.dart';
@@ -22,23 +23,31 @@ class PrayerScreen extends StatefulWidget {
 class _PrayerScreenState extends State<PrayerScreen> {
   final GlobalKey headerKey = new GlobalKey();
 
-  StreamController<int> languageSelectorStream;
+  StreamController<LanguageUpdateEvent> languageSelectorStream;
   PrayerScreenViewModel viewModel = PrayerScreenViewModel();
 
   Data data;
 
   @override
   void initState() {
-    languageSelectorStream = StreamController<int>();
+    languageSelectorStream = StreamController<LanguageUpdateEvent>.broadcast();
 
-    languageSelectorStream.stream.listen((value) {
-      setState(() {
-        data = data.copyWith(languageId: value);
-        viewModel.displayOverlay = false;
-      });
+    languageSelectorStream.stream.listen((event) {
+      if (event is LanguageUpdateFinished) {
+        setState(() {
+          viewModel.displayOverlay = false;
+          data = data.copyWith(languageId: event.newLanguageCode);
+        });
+      }
     });
     super.initState();
   }
+
+  @override
+    void reassemble() {
+      viewModel.displayOverlay = true;
+      super.reassemble();
+    }
 
   @override
   void dispose() {
@@ -94,7 +103,8 @@ class _PrayerScreenState extends State<PrayerScreen> {
         PrayerContent(
             headerKey: headerKey,
             languageId: data.languageId,
-            prayer: data.prayer),
+            prayer: data.prayer,
+            languageStream: languageSelectorStream.stream,),
         _buildOverlay(data),
       ],
     );
@@ -106,7 +116,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
         headerKey: headerKey,
         order: data.order,
         prayer: data.prayer,
-        languageSink: languageSelectorStream,
+        languageStreamController: languageSelectorStream,
       );
     }
 
