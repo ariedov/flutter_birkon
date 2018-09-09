@@ -94,13 +94,16 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
           SizedBox(height: 24.0),
           Opacity(
             opacity: viewModel.headerOpacity,
-            child: Text(
-              viewModel.headerTitle,
-              textDirection: viewModel.headerTextDirection,
-              style: Theme.of(context).textTheme.title.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24.0,
-                  color: Colors.white),
+            child: SizedBox(
+              height: 30.0,
+              child: Text(
+                viewModel.headerTitle,
+                textDirection: viewModel.headerTextDirection,
+                style: Theme.of(context).textTheme.title.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24.0,
+                    color: Colors.white),
+              ),
             ),
           ),
         ],

@@ -13,7 +13,7 @@ class PrayerContent extends StatelessWidget {
   final int languageId;
 
   final GlobalKey headerKey;
-  final Stream<LanguageUpdateEvent> languageStream;
+  final StreamController<LanguageUpdateEvent> languageStream;
 
   const PrayerContent({Key key, this.prayer, this.languageId, this.headerKey, this.languageStream})
       : super(key: key);
@@ -31,11 +31,14 @@ class PrayerContent extends StatelessWidget {
               key: headerKey,
               decoration: BoxDecoration(color: Colors.blue),
               child: Column(children: <Widget>[
-                Header(prayer: prayer, languageCode: languageId, languageStream: languageStream,),
+                Header(prayer: prayer, languageCode: languageId, languageStream: languageStream.stream,),
                 SizedBox(height: 16.0),
                 HeaderButton(
                   text: AppLocalizations.get(context, languageId),
-                  onPressed: () {},
+                  onPressed: () {
+                    double height = headerKey.currentContext.size.height;
+                    languageStream.add(LanguageUpdateEvent.requried(height));
+                  },
                 ),
               ]),
             ),

@@ -33,6 +33,14 @@ class _PrayerScreenState extends State<PrayerScreen> {
     languageSelectorStream = StreamController<LanguageUpdateEvent>.broadcast();
 
     languageSelectorStream.stream.listen((event) {
+      if (event is LanguageUpdateRequired) {
+        setState(() {
+          viewModel.displayOverlay = true;
+          viewModel.showCollapsedOverlay = true;
+          viewModel.headerHeight = event.headerHeight;
+          viewModel.screenWidth = context.size.width;
+        });
+      }
       if (event is LanguageUpdateFinished) {
         setState(() {
           viewModel.displayOverlay = false;
@@ -42,12 +50,6 @@ class _PrayerScreenState extends State<PrayerScreen> {
     });
     super.initState();
   }
-
-  @override
-    void reassemble() {
-      viewModel.displayOverlay = true;
-      super.reassemble();
-    }
 
   @override
   void dispose() {
@@ -71,10 +73,10 @@ class _PrayerScreenState extends State<PrayerScreen> {
         new PreferencesOrderProvider();
     OrderProvider orderProvider =
         new OrderProvider(preferencesOrderProvider, localeOrderProvider);
-    
+
     Future<Prayer> prayer = prayerReader.readPrayer(context, widget.prayerId);
     Future<Order> order = orderProvider.loadOrder();
-    
+
     return new FutureBuilder(
         future: _loadData(prayer, order),
         builder: (BuildContext context, AsyncSnapshot<Data> snapshot) {
@@ -101,10 +103,11 @@ class _PrayerScreenState extends State<PrayerScreen> {
     return Stack(
       children: <Widget>[
         PrayerContent(
-            headerKey: headerKey,
-            languageId: data.languageId,
-            prayer: data.prayer,
-            languageStream: languageSelectorStream.stream,),
+          headerKey: headerKey,
+          languageId: data.languageId,
+          prayer: data.prayer,
+          languageStream: languageSelectorStream,
+        ),
         _buildOverlay(data),
       ],
     );
@@ -116,6 +119,10 @@ class _PrayerScreenState extends State<PrayerScreen> {
         headerKey: headerKey,
         order: data.order,
         prayer: data.prayer,
+        showCollapsed: viewModel.showCollapsedOverlay,
+        initialTranslation: data.languageId,
+        targetHeight: viewModel.headerHeight,
+        screenWidth: viewModel.screenWidth,
         languageStreamController: languageSelectorStream,
       );
     }
@@ -131,6 +138,9 @@ class _PrayerScreenState extends State<PrayerScreen> {
 
 class PrayerScreenViewModel {
   bool displayOverlay = true;
+  bool showCollapsedOverlay = false;
+  double headerHeight;
+  double screenWidth;
 }
 
 class Data {
