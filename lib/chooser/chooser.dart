@@ -178,9 +178,11 @@ class _ChooserState extends State<Chooser> with TickerProviderStateMixin {
   }
 
   _startButtonsFadeAnimation(int translationId) {
+    if (widget.initialTranslation != translationId) {
+      widget.languageStreamController
+          .add(LanguageUpdateEvent.started(translationId));
+    }
     this.selectedLanguageId = translationId;
-    widget.languageStreamController
-        .add(LanguageUpdateEvent.started(translationId));
 
     firstOffsetTween = translationId == widget.order.primary
         ? Tween<Offset>(begin: state.firstOffset, end: state.firstOffset)
