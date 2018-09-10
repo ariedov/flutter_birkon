@@ -128,6 +128,13 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
     return statusBarHeight;
   }
+
+  @override
+  void dispose() {
+    showAnimation.dispose();
+    hideAnimation.dispose();
+    super.dispose();
+  }
 }
 
 class HeaderViewModel {

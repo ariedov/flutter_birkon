@@ -215,15 +215,25 @@ class _ChooserState extends State<Chooser> with TickerProviderStateMixin {
   }
 
   _startExpandAnimation() {
-    firstOffsetTween = Tween<Offset>(begin: state.firstOffset, end: Offset(0.0, 0.0));
-    secondOffsetTween = Tween<Offset>(begin: state.secondOffset, end: Offset(0.0, 0.0));
-    thirdOffsetTween = Tween<Offset>(begin: state.thirdOffset, end: Offset(0.0, 0.0));
+    firstOffsetTween =
+        Tween<Offset>(begin: state.firstOffset, end: Offset(0.0, 0.0));
+    secondOffsetTween =
+        Tween<Offset>(begin: state.secondOffset, end: Offset(0.0, 0.0));
+    thirdOffsetTween =
+        Tween<Offset>(begin: state.thirdOffset, end: Offset(0.0, 0.0));
 
     heightTween = Tween<double>(begin: state.height, end: 400.0);
     cornersTween = Tween<double>(begin: state.corners, end: 50.0);
     backgroundTween = ColorTween(begin: state.background, end: Colors.black26);
 
     expandAnimation.forward();
+  }
+
+  @override
+  void dispose() {
+    collapseAnimation.dispose();
+    expandAnimation.dispose();
+    super.dispose();
   }
 }
 

@@ -8,15 +8,87 @@ import 'package:birkon/model/prayer.dart';
 import 'package:birkon/prayer/view/paragraph.dart';
 import 'package:flutter/material.dart';
 
-class PrayerContent extends StatelessWidget {
+class PrayerContent extends StatefulWidget {
   final Prayer prayer;
   final int languageId;
 
   final GlobalKey headerKey;
   final StreamController<LanguageUpdateEvent> languageStream;
 
-  const PrayerContent({Key key, this.prayer, this.languageId, this.headerKey, this.languageStream})
+  const PrayerContent(
+      {Key key,
+      this.prayer,
+      this.languageId,
+      this.headerKey,
+      this.languageStream})
       : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _PrayerContentState();
+}
+
+class _PrayerContentState extends State<PrayerContent>
+    with TickerProviderStateMixin {
+  PrayerContentViewModel viewModel;
+
+  AnimationController hidePrayerAnimation;
+  AnimationController showPrayerAnimation;
+
+  Tween<double> hideTween;
+  Tween<double> showTween;
+
+  @override
+  void initState() {
+    widget.languageStream.stream.listen((state) {
+      if (state is LangaugeUpdateStarted) {
+        viewModel.nextTranslationId = state.newLanguageCode;
+
+        _startPrayerHideAnimation();
+      }
+    });
+
+    showPrayerAnimation =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 150))
+          ..addListener(() {
+            setState(() {
+              viewModel.contentOpacity =
+                  showTween.evaluate(showPrayerAnimation);
+            });
+          });
+
+    hidePrayerAnimation =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 150))
+          ..addListener(() {
+            setState(() {
+              viewModel.contentOpacity =
+                  hideTween.evaluate(hidePrayerAnimation);
+            });
+          })
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed) {
+              viewModel.translationId = viewModel.nextTranslationId;
+              showPrayerAnimation.forward(from: 0.0);
+            }
+          });
+
+    viewModel = PrayerContentViewModel();
+    viewModel.translationId = widget.languageId;
+    super.initState();
+  }
+
+  _startPrayerHideAnimation() {
+    hideTween = Tween<double>(begin: viewModel.contentOpacity, end: 0.0);
+    showTween = ReverseTween<double>(hideTween);
+
+    hidePrayerAnimation.forward(from: 0.0);
+  }
+
+  @override
+  void didUpdateWidget(PrayerContent oldWidget) {
+    viewModel.translationId = widget.languageId;
+
+    super.didUpdateWidget(oldWidget);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,20 +96,21 @@ class PrayerContent extends StatelessWidget {
         body: CustomScrollView(
       slivers: <Widget>[
         SliverAppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.blue,
           expandedHeight: 250.0,
           flexibleSpace: FlexibleSpaceBar(
             background: Container(
-              key: headerKey,
+              key: widget.headerKey,
               decoration: BoxDecoration(color: Colors.blue),
               child: Column(children: <Widget>[
-                Header(prayer: prayer, languageCode: languageId),
+                Header(prayer: widget.prayer, languageCode: widget.languageId),
                 SizedBox(height: 16.0),
                 HeaderButton(
-                  text: AppLocalizations.get(context, languageId),
+                  text: AppLocalizations.get(context, widget.languageId),
                   onPressed: () {
-                    double height = headerKey.currentContext.size.height;
-                    languageStream.add(LanguageUpdateEvent.requried(height));
+                    double height = widget.headerKey.currentContext.size.height;
+                    widget.languageStream
+                        .add(LanguageUpdateEvent.requried(height));
                   },
                 ),
               ]),
@@ -47,20 +120,34 @@ class PrayerContent extends StatelessWidget {
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (context, index) {
-              return PrayerParagraph(
-                paragraph: prayer.paragraphs[index],
-                languageCode: languageId,
-                listener: (paragraph) {
-                  
-                },
+              return Opacity(
+                opacity: viewModel.contentOpacity,
+                child: PrayerParagraph(
+                  paragraph: widget.prayer.paragraphs[index],
+                  languageCode: viewModel.translationId
+                ),
               );
             },
-            childCount: prayer.paragraphs.length,
+            childCount: widget.prayer.paragraphs.length,
           ),
-        )
+        ),
       ],
     ));
   }
+
+  @override
+  void dispose() {
+    showPrayerAnimation.dispose();
+    hidePrayerAnimation.dispose();
+    super.dispose();
+  }
+}
+
+class PrayerContentViewModel {
+  double contentOpacity = 1.0;
+
+  int translationId;
+  int nextTranslationId;
 }
 
 typedef void OnMenuClickListener(int menuId);

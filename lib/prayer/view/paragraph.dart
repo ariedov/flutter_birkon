@@ -5,10 +5,9 @@ import 'package:flutter/material.dart';
 class PrayerParagraph extends StatefulWidget {
   final TranslatedPrayer paragraph;
   final int languageCode;
-  final ParagraphClickListener listener;
 
   const PrayerParagraph(
-      {Key key, this.paragraph, this.languageCode, this.listener})
+      {Key key, this.paragraph, this.languageCode})
       : super(key: key);
 
   @override
@@ -31,5 +30,3 @@ class ParagraphState extends State<PrayerParagraph> {
         ));
   }
 }
-
-typedef void ParagraphClickListener(TranslatedPrayer paragraph);
