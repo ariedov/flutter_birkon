@@ -168,7 +168,7 @@ class _ChooserState extends State<Chooser> with TickerProviderStateMixin {
     return Transform(
       child: HeaderButton(
         key: key,
-        text: AppLocalizations.get(context, translationId),
+        text: AppLocalizations.getFromKey(context, translationId),
         onPressed: () {
           _startButtonsFadeAnimation(translationId);
         },

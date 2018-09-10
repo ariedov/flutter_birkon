@@ -106,7 +106,7 @@ class _PrayerContentState extends State<PrayerContent>
                 Header(prayer: widget.prayer, languageCode: widget.languageId),
                 SizedBox(height: 16.0),
                 HeaderButton(
-                  text: AppLocalizations.get(context, widget.languageId),
+                  text: AppLocalizations.getFromKey(context, widget.languageId),
                   onPressed: () {
                     double height = widget.headerKey.currentContext.size.height;
                     widget.languageStream
