@@ -37,9 +37,11 @@ class _PrayerContentState extends State<PrayerContent>
   Tween<double> hideTween;
   Tween<double> showTween;
 
+  StreamSubscription subscription;
+
   @override
   void initState() {
-    widget.languageStream.stream.listen((state) {
+    subscription = widget.languageStream.stream.listen((state) {
       if (state is LangaugeUpdateStarted) {
         viewModel.nextTranslationId = state.newLanguageCode;
 
@@ -139,6 +141,8 @@ class _PrayerContentState extends State<PrayerContent>
   void dispose() {
     showPrayerAnimation.dispose();
     hidePrayerAnimation.dispose();
+
+    subscription.cancel();
     super.dispose();
   }
 }

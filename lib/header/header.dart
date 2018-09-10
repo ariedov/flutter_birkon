@@ -26,6 +26,8 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
   Tween<double> hideTween;
   Tween<double> showTween;
 
+  StreamSubscription subscription;
+
   @override
   void initState() {
     viewModel.headerTitle =
@@ -33,7 +35,7 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
     viewModel.headerTextDirection =
         widget.prayer.title.get(widget.languageCode).direction;
 
-    widget.languageStream?.listen((event) {
+    subscription = widget.languageStream?.listen((event) {
       if (event is LangaugeUpdateStarted) {
         viewModel.tmpLanguageCode = event.newLanguageCode;
         _startLanguageAnimation(event.newLanguageCode);
@@ -133,6 +135,8 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
   void dispose() {
     showAnimation.dispose();
     hideAnimation.dispose();
+
+    subscription?.cancel();
     super.dispose();
   }
 }
