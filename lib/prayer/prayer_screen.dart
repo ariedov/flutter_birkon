@@ -83,6 +83,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
               return Container(
+                  color: Colors.white,
                   alignment: Alignment.center,
                   child: SizedBox.fromSize(
                     child: CircularProgressIndicator(),

@@ -124,7 +124,9 @@ class _ChooserState extends State<Chooser> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        Container(color: state.background),
+        GestureDetector(
+            child: Container(color: state.background),
+            onTap: () => _startButtonsFadeAnimation(widget.initialTranslation)),
         SizedBox(
           height: state.height,
           child: Stack(
