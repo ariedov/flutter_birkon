@@ -39,6 +39,8 @@ class _PrayerContentState extends State<PrayerContent>
 
   StreamSubscription subscription;
 
+  ScrollController scrollController;
+
   @override
   void initState() {
     subscription = widget.languageStream.stream.listen((state) {
@@ -73,6 +75,8 @@ class _PrayerContentState extends State<PrayerContent>
             }
           });
 
+    scrollController = ScrollController();
+
     viewModel = PrayerContentViewModel();
     viewModel.translationId = widget.languageId;
     super.initState();
@@ -96,6 +100,7 @@ class _PrayerContentState extends State<PrayerContent>
   Widget build(BuildContext context) {
     return Scaffold(
         body: CustomScrollView(
+      controller: scrollController,
       slivers: <Widget>[
         SliverAppBar(
           backgroundColor: Colors.blue,
@@ -110,6 +115,9 @@ class _PrayerContentState extends State<PrayerContent>
                 HeaderButton(
                   text: AppLocalizations.getFromKey(context, widget.languageId),
                   onPressed: () {
+                    scrollController.animateTo(0.0,
+                        duration: Duration(milliseconds: 300), curve: Curves.decelerate);
+
                     double height = widget.headerKey.currentContext.size.height;
                     widget.languageStream
                         .add(LanguageUpdateEvent.requried(height));
@@ -125,9 +133,8 @@ class _PrayerContentState extends State<PrayerContent>
               return Opacity(
                 opacity: viewModel.contentOpacity,
                 child: PrayerParagraph(
-                  paragraph: widget.prayer.paragraphs[index],
-                  languageCode: viewModel.translationId
-                ),
+                    paragraph: widget.prayer.paragraphs[index],
+                    languageCode: viewModel.translationId),
               );
             },
             childCount: widget.prayer.paragraphs.length,
