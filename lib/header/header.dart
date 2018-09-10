@@ -33,9 +33,9 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
     viewModel.headerTextDirection =
         widget.prayer.title.get(widget.languageCode).direction;
 
-    widget.languageStream.listen((event) {
+    widget.languageStream?.listen((event) {
       if (event is LangaugeUpdateStarted) {
-        viewModel.nextLanguageCode = event.newLanguageCode;
+        viewModel.tmpLanguageCode = event.newLanguageCode;
         _startLanguageAnimation(event.newLanguageCode);
       }
     });
@@ -57,6 +57,7 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
           })
           ..addStatusListener((status) {
             if (status == AnimationStatus.completed) {
+              viewModel.nextLanguageCode = viewModel.tmpLanguageCode;
               viewModel.headerTitle = widget.prayer.title
                   .get(viewModel.nextLanguageCode)
                   .text
@@ -70,6 +71,18 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
 
     super.initState();
   }
+
+  @override
+  didUpdateWidget(Header oldWidget) {
+    viewModel.headerTitle =
+        widget.prayer.title.get(_getLanguageCode()).text.toUpperCase();
+    viewModel.headerTextDirection =
+        widget.prayer.title.get(_getLanguageCode()).direction;
+
+    super.didUpdateWidget(oldWidget);
+  }
+
+  _getLanguageCode() => viewModel.nextLanguageCode ?? widget.languageCode;
 
   _startLanguageAnimation(int language) {
     hideTween = Tween<double>(begin: 1.0, end: 0.0);
@@ -121,6 +134,7 @@ class HeaderViewModel {
   String headerTitle;
   TextDirection headerTextDirection;
 
+  int tmpLanguageCode;
   int nextLanguageCode;
 
   double headerOpacity = 1.0;

@@ -7,7 +7,8 @@ class PrayerParagraph extends StatefulWidget {
   final int languageCode;
   final ParagraphClickListener listener;
 
-  const PrayerParagraph({Key key, this.paragraph, this.languageCode, this.listener})
+  const PrayerParagraph(
+      {Key key, this.paragraph, this.languageCode, this.listener})
       : super(key: key);
 
   @override
@@ -17,32 +18,17 @@ class PrayerParagraph extends StatefulWidget {
 class ParagraphState extends State<PrayerParagraph> {
   @override
   Widget build(BuildContext context) {
-    bool isLtr = widget.paragraph.get(widget.languageCode).direction == TextDirection.ltr;
-    return new InkWell(
-        onTap: () {
-          widget.listener(widget.paragraph);
-        },
-        child: new Padding(
-            padding: EdgeInsets.all(16.0),
-            child: new Column(
-              crossAxisAlignment: isLtr ? CrossAxisAlignment.start : CrossAxisAlignment.end,
-              children: <Widget>[
-                new PrayerText(widget.paragraph.get(widget.languageCode)),
-                _buildDropDownIcon(isLtr)
-              ],
-            )));
-  }
-
-  Widget _buildDropDownIcon(bool isLtr) {
-    return new Align(
-      alignment: isLtr ? Alignment.bottomRight : Alignment.bottomLeft,
-      child: new RotatedBox(
-        quarterTurns: isLtr ? 1 : 2,
-        child: new Icon(Icons.launch,
-          size: 12.0,
-        ),
-      ),
-    );
+    bool isLtr = widget.paragraph.get(widget.languageCode).direction ==
+        TextDirection.ltr;
+    return Padding(
+        padding: EdgeInsets.all(16.0),
+        child: new Column(
+          crossAxisAlignment:
+              isLtr ? CrossAxisAlignment.start : CrossAxisAlignment.end,
+          children: <Widget>[
+            PrayerText(widget.paragraph.get(widget.languageCode)),
+          ],
+        ));
   }
 }
 

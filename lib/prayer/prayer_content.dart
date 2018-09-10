@@ -31,7 +31,7 @@ class PrayerContent extends StatelessWidget {
               key: headerKey,
               decoration: BoxDecoration(color: Colors.blue),
               child: Column(children: <Widget>[
-                Header(prayer: prayer, languageCode: languageId, languageStream: languageStream.stream,),
+                Header(prayer: prayer, languageCode: languageId),
                 SizedBox(height: 16.0),
                 HeaderButton(
                   text: AppLocalizations.get(context, languageId),

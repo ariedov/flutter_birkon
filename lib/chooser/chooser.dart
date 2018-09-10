@@ -143,7 +143,7 @@ class _ChooserState extends State<Chooser> with TickerProviderStateMixin {
                   children: <Widget>[
                     Header(
                       prayer: widget.prayer,
-                      languageCode: widget.order.primary,
+                      languageCode: widget.initialTranslation,
                       languageStream: widget.languageStreamController.stream,
                     ),
                     SizedBox(height: 16.0),
