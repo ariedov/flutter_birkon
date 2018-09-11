@@ -99,48 +99,52 @@ class _PrayerContentState extends State<PrayerContent>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: CustomScrollView(
-      controller: scrollController,
-      slivers: <Widget>[
-        SliverAppBar(
-          backgroundColor: Colors.blue,
-          expandedHeight: 250.0,
-          flexibleSpace: FlexibleSpaceBar(
-            background: Container(
-              key: widget.headerKey,
-              decoration: BoxDecoration(color: Colors.blue),
-              child: Column(children: <Widget>[
-                Header(prayer: widget.prayer, languageCode: widget.languageId),
-                SizedBox(height: 16.0),
-                HeaderButton(
-                  text: AppLocalizations.getFromKey(context, widget.languageId),
-                  onPressed: () {
-                    scrollController.animateTo(0.0,
-                        duration: Duration(milliseconds: 300), curve: Curves.decelerate);
+        body: Opacity(
+      opacity: viewModel.contentOpacity,
+      child: CustomScrollView(
+        controller: scrollController,
+        slivers: <Widget>[
+          SliverAppBar(
+            backgroundColor: Colors.blue,
+            expandedHeight: 250.0,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Container(
+                key: widget.headerKey,
+                decoration: BoxDecoration(color: Colors.blue),
+                child: Column(children: <Widget>[
+                  Header(
+                      prayer: widget.prayer, languageCode: widget.languageId),
+                  SizedBox(height: 16.0),
+                  HeaderButton(
+                    text:
+                        AppLocalizations.getFromKey(context, widget.languageId),
+                    onPressed: () {
+                      scrollController.animateTo(0.0,
+                          duration: Duration(milliseconds: 300),
+                          curve: Curves.decelerate);
 
-                    double height = widget.headerKey.currentContext.size.height;
-                    widget.languageStream
-                        .add(LanguageUpdateEvent.requried(height));
-                  },
-                ),
-              ]),
+                      double height =
+                          widget.headerKey.currentContext.size.height;
+                      widget.languageStream
+                          .add(LanguageUpdateEvent.requried(height));
+                    },
+                  ),
+                ]),
+              ),
             ),
           ),
-        ),
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (context, index) {
-              return Opacity(
-                opacity: viewModel.contentOpacity,
-                child: PrayerParagraph(
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                return PrayerParagraph(
                     paragraph: widget.prayer.paragraphs[index],
-                    languageCode: viewModel.translationId),
-              );
-            },
-            childCount: widget.prayer.paragraphs.length,
+                    languageCode: viewModel.translationId);
+              },
+              childCount: widget.prayer.paragraphs.length,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     ));
   }
 
