@@ -8,6 +8,8 @@ dependencies:
   flutter:
     sdk: flutter
   shared_preferences: "0.4.2"
+  chooser:
+    git: git@github.com:ariedov/flutter_options_chooser.git
 
 dev_dependencies:
   flutter_test:

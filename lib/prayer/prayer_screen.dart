@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:birkon/chooser/chooser.dart';
 import 'package:birkon/header/header.dart';
 import 'package:birkon/header/header_button.dart';
 import 'package:birkon/language.dart';
@@ -12,6 +11,7 @@ import 'package:birkon/model/order/preferences_order_provider.dart';
 import 'package:birkon/model/prayer.dart';
 import 'package:birkon/model/prayer_reader.dart';
 import 'package:birkon/prayer/prayer_content.dart';
+import 'package:chooser/chooser.dart';
 import 'package:flutter/material.dart';
 
 class PrayerScreen extends StatefulWidget {
