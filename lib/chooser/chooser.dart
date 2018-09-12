@@ -1,34 +1,26 @@
-import 'dart:async';
-
-import 'package:birkon/header/header.dart';
-import 'package:birkon/header/header_button.dart';
-import 'package:birkon/language.dart';
-import 'package:birkon/localization/localizations.dart';
-import 'package:birkon/model/order/order.dart';
-import 'package:birkon/model/prayer.dart';
 import 'package:flutter/material.dart';
 
 class Chooser extends StatefulWidget {
-  final Prayer prayer;
-  final Order order;
-  final GlobalKey headerKey;
-  final double targetHeight;
+  final HeightProvider provideHeight;
+  final Widget header;
+  final Builder actionsBuilder;
+  final List<int> ids;
   final double screenWidth;
   final bool showCollapsed;
-  final int initialTranslation;
+  final int initialValue;
 
-  final StreamController<LanguageUpdateEvent> languageStreamController;
+  final Sink<ChooserEvent> chooserSink;
 
   const Chooser(
       {Key key,
-      this.prayer,
-      this.order,
-      this.headerKey,
+      this.header,
+      this.actionsBuilder,
+      this.ids,
       this.showCollapsed,
-      this.initialTranslation,
-      this.targetHeight,
+      this.initialValue,
+      this.provideHeight,
       this.screenWidth,
-      this.languageStreamController})
+      this.chooserSink})
       : super(key: key);
 
   @override
@@ -57,7 +49,8 @@ class _ChooserState extends State<Chooser> with TickerProviderStateMixin {
   Tween<double> heightTween;
   ColorTween backgroundTween;
 
-  int selectedLanguageId;
+  double targetHeight;
+  int selectedId;
 
   @override
   void initState() {
@@ -74,24 +67,23 @@ class _ChooserState extends State<Chooser> with TickerProviderStateMixin {
           })
           ..addStatusListener((status) {
             if (status == AnimationStatus.completed) {
-              widget.languageStreamController
-                  .add(LanguageUpdateEvent.finished(selectedLanguageId));
+              widget.chooserSink.add(ChooserFinished(selectedId));
             }
           });
 
     state = ChooserState();
     if (widget.showCollapsed) {
-      state.height = widget.targetHeight;
+      state.height = widget.provideHeight();
       state.corners = 0.0;
       state.background = Colors.transparent;
 
-      state.firstOffset = widget.initialTranslation == widget.order.primary
+      state.firstOffset = widget.initialValue == widget.ids[0]
           ? Offset(0.0, 0.0)
           : Offset(-2 * widget.screenWidth, 0.0);
-      state.secondOffset = widget.initialTranslation == widget.order.secondary
+      state.secondOffset = widget.initialValue == widget.ids[1]
           ? Offset(0.0, -(25.0 + 16.0))
           : Offset(-2 * widget.screenWidth, 0.0);
-      state.thirdOffset = widget.initialTranslation == widget.order.ternary
+      state.thirdOffset = widget.initialValue == widget.ids[2]
           ? Offset(0.0, -((25.0 + 16.0) * 2))
           : Offset(-2 * widget.screenWidth, 0.0);
 
@@ -126,7 +118,7 @@ class _ChooserState extends State<Chooser> with TickerProviderStateMixin {
       children: <Widget>[
         GestureDetector(
             child: Container(color: state.background),
-            onTap: () => _startButtonsFadeAnimation(widget.initialTranslation)),
+            onTap: () => _startButtonsFadeAnimation(widget.initialValue)),
         SizedBox(
           height: state.height,
           child: Stack(
@@ -143,19 +135,22 @@ class _ChooserState extends State<Chooser> with TickerProviderStateMixin {
                 physics: NeverScrollableScrollPhysics(),
                 child: Column(
                   children: <Widget>[
-                    Header(
-                      prayer: widget.prayer,
-                      languageCode: widget.initialTranslation,
-                      languageStream: widget.languageStreamController.stream,
-                    ),
-                    SizedBox(height: 16.0),
-                    _buildButton(top, widget.order.primary, state.firstOffset),
+                    widget.header,
                     SizedBox(height: 16.0),
                     _buildButton(
-                        secondary, widget.order.secondary, state.secondOffset),
+                        widget.actionsBuilder(context, top, widget.ids[0],
+                            () => _startButtonsFadeAnimation(widget.ids[0])),
+                        state.firstOffset),
                     SizedBox(height: 16.0),
                     _buildButton(
-                        ternary, widget.order.ternary, state.thirdOffset),
+                        widget.actionsBuilder(context, secondary, widget.ids[1],
+                            () => _startButtonsFadeAnimation(widget.ids[1])),
+                        state.secondOffset),
+                    SizedBox(height: 16.0),
+                    _buildButton(
+                        widget.actionsBuilder(context, ternary, widget.ids[2],
+                            () => _startButtonsFadeAnimation(widget.ids[2])),
+                        state.thirdOffset),
                   ],
                 ),
               ),
@@ -166,33 +161,26 @@ class _ChooserState extends State<Chooser> with TickerProviderStateMixin {
     );
   }
 
-  _buildButton(Key key, int translationId, Offset offset) {
+  _buildButton(Widget child, Offset offset) {
     return Transform(
-      child: HeaderButton(
-        key: key,
-        text: AppLocalizations.getFromKey(context, translationId),
-        onPressed: () {
-          _startButtonsFadeAnimation(translationId);
-        },
-      ),
+      child: child,
       transform: Matrix4.translationValues(offset.dx, offset.dy, 0.0),
     );
   }
 
-  _startButtonsFadeAnimation(int translationId) {
-    if (widget.initialTranslation != translationId) {
-      widget.languageStreamController
-          .add(LanguageUpdateEvent.started(translationId));
+  _startButtonsFadeAnimation(int selectedId) {
+    if (widget.initialValue != selectedId) {
+      widget.chooserSink.add(ChooserStarted(selectedId));
     }
-    this.selectedLanguageId = translationId;
+    this.selectedId = selectedId;
 
-    firstOffsetTween = translationId == widget.order.primary
+    firstOffsetTween = selectedId == widget.ids[0]
         ? Tween<Offset>(begin: state.firstOffset, end: state.firstOffset)
         : Tween<Offset>(
             begin: state.firstOffset,
             end: Offset(2 * context.size.width, state.firstOffset.dy));
 
-    secondOffsetTween = translationId == widget.order.secondary
+    secondOffsetTween = selectedId == widget.ids[1]
         ? Tween<Offset>(
             begin: state.secondOffset,
             end: Offset(0.0, -(secondary.currentContext.size.height + 16.0)))
@@ -200,7 +188,7 @@ class _ChooserState extends State<Chooser> with TickerProviderStateMixin {
             begin: state.secondOffset,
             end: Offset(2 * context.size.width, state.secondOffset.dy));
 
-    thirdOffsetTween = translationId == widget.order.ternary
+    thirdOffsetTween = selectedId == widget.ids[2]
         ? Tween<Offset>(
             begin: state.thirdOffset,
             end:
@@ -209,8 +197,8 @@ class _ChooserState extends State<Chooser> with TickerProviderStateMixin {
             begin: state.thirdOffset,
             end: Offset(2 * context.size.width, state.thirdOffset.dy));
 
-    final height = widget.headerKey.currentContext.size.height;
-    heightTween = Tween<double>(begin: state.height, end: height);
+    heightTween =
+        Tween<double>(begin: state.height, end: widget.provideHeight());
     cornersTween = Tween<double>(begin: state.corners, end: 0.0);
     backgroundTween =
         ColorTween(begin: state.background, end: Colors.transparent);
@@ -252,4 +240,23 @@ class ChooserState {
 
   double corners = 50.0;
   double height = 400.0;
+}
+
+typedef double HeightProvider();
+
+typedef Widget Builder(
+    BuildContext context, Key key, int id, VoidCallback pressed);
+
+abstract class ChooserEvent {
+  final int id;
+
+  const ChooserEvent(this.id);
+}
+
+class ChooserStarted extends ChooserEvent {
+  const ChooserStarted(int id) : super(id);
+}
+
+class ChooserFinished extends ChooserEvent {
+  const ChooserFinished(int id) : super(id);
 }

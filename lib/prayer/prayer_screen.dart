@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:birkon/chooser/chooser.dart';
+import 'package:birkon/header/header.dart';
+import 'package:birkon/header/header_button.dart';
 import 'package:birkon/language.dart';
+import 'package:birkon/localization/localizations.dart';
 import 'package:birkon/model/order/locale_order_provider.dart';
 import 'package:birkon/model/order/order.dart';
 import 'package:birkon/model/order/order_provider.dart';
@@ -117,14 +120,35 @@ class _PrayerScreenState extends State<PrayerScreen> {
   _buildOverlay(Data data) {
     if (viewModel.displayOverlay) {
       return Chooser(
-        headerKey: headerKey,
-        order: data.order,
-        prayer: data.prayer,
+        ids: [data.order.primary, data.order.secondary, data.order.ternary],
+        actionsBuilder: (context, key, id, pressed) => HeaderButton(
+              key: key,
+              text: AppLocalizations.getFromKey(context, id),
+              onPressed: pressed,
+            ),
+        header: Header(
+          prayer: data.prayer,
+          languageCode: data.languageId,
+          languageStream: languageSelectorStream.stream,
+        ),
         showCollapsed: viewModel.showCollapsedOverlay,
-        initialTranslation: data.languageId,
-        targetHeight: viewModel.headerHeight,
+        initialValue: data.languageId,
+        provideHeight: () {
+          if (viewModel.headerHeight != null) {
+            return viewModel.headerHeight;
+          }
+          return headerKey.currentContext.size.height;
+        },
         screenWidth: viewModel.screenWidth,
-        languageStreamController: languageSelectorStream,
+        chooserSink: StreamController()
+        ..stream.listen((state) {
+          if (state is ChooserStarted) {
+            languageSelectorStream.add(LanguageUpdateEvent.started(state.id));
+          }
+          if (state is ChooserFinished) {
+            languageSelectorStream.add(LanguageUpdateEvent.finished(state.id));
+          }
+        }),
       );
     }
 
