@@ -1,0 +1,9 @@
+primary:
+steps:
+- certificate-and-profile-installer:
+    inputs:
+    - install_defaults: 'no'
+- git-clone: {}
+- flutter:
+    inputs:
+    - commands: test|build ios|build apk
