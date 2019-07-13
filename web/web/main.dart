@@ -3,8 +3,12 @@
 // found in the LICENSE file.
 import 'package:flutter_web_ui/ui.dart' as ui;
 import 'package:birkon_web/main.dart' as app;
+import 'package:flutter_web_ui/src/engine.dart' as engine;
 
 main() async {
-  await ui.webOnlyInitializePlatform();
+  await ui.webOnlyInitializePlatform(
+    assetManager: engine.AssetManager(
+      assetsDir: "assets"
+    ));
   app.main();
 }

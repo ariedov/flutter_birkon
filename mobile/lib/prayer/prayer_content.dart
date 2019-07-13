@@ -4,8 +4,8 @@ import 'package:birkon/header/header.dart';
 import 'package:birkon/header/header_button.dart';
 import 'package:birkon/language.dart';
 import 'package:birkon/localization/localizations.dart';
-import 'package:birkon/model/prayer.dart';
 import 'package:birkon/prayer/view/paragraph.dart';
+import 'package:common/prayer.dart';
 import 'package:flutter/material.dart';
 
 class PrayerContent extends StatefulWidget {

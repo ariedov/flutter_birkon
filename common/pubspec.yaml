@@ -1,0 +1,8 @@
+name: common
+description: An app built using Flutter for web
+
+environment:
+  sdk: '>=2.3.0 <3.0.0'
+
+dev_dependencies:
+  test: any

@@ -1,8 +1,12 @@
 import 'dart:async';
 
 import 'package:birkon/language.dart';
-import 'package:birkon/model/prayer.dart';
+import 'package:common/dao/direction.dart';
+import 'package:common/dao/language.dart';
+import 'package:common/prayer.dart';
 import 'package:flutter/material.dart';
+
+import '../utils.dart';
 
 class Header extends StatefulWidget {
   final Prayer prayer;
@@ -30,10 +34,11 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    final language = keyToLanguage(widget.languageCode);
     viewModel.headerTitle =
-        widget.prayer.title.get(widget.languageCode).text.toUpperCase();
+        widget.prayer.title.get(language).text.toUpperCase();
     viewModel.headerTextDirection =
-        widget.prayer.title.get(widget.languageCode).direction;
+        convertDirection(widget.prayer.title.get(language).direction);
 
     subscription = widget.languageStream?.listen((event) {
       if (event is LangaugeUpdateStarted) {
@@ -61,11 +66,11 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
             if (status == AnimationStatus.completed) {
               viewModel.nextLanguageCode = viewModel.tmpLanguageCode;
               viewModel.headerTitle = widget.prayer.title
-                  .get(viewModel.nextLanguageCode)
+                  .get(keyToLanguage(viewModel.nextLanguageCode))
                   .text
                   .toUpperCase();
               viewModel.headerTextDirection =
-                  widget.prayer.title.get(viewModel.nextLanguageCode).direction;
+                  convertDirection(widget.prayer.title.get(keyToLanguage(viewModel.nextLanguageCode)).direction);
 
               showAnimation.forward();
             }
@@ -77,14 +82,14 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
   @override
   didUpdateWidget(Header oldWidget) {
     viewModel.headerTitle =
-        widget.prayer.title.get(_getLanguageCode()).text.toUpperCase();
+        widget.prayer.title.get(_getLanguage()).text.toUpperCase();
     viewModel.headerTextDirection =
-        widget.prayer.title.get(_getLanguageCode()).direction;
+        convertDirection(widget.prayer.title.get(_getLanguage()).direction);
 
     super.didUpdateWidget(oldWidget);
   }
 
-  _getLanguageCode() => viewModel.nextLanguageCode ?? widget.languageCode;
+  Language _getLanguage() => keyToLanguage(viewModel.nextLanguageCode ?? widget.languageCode);
 
   _startLanguageAnimation(int language) {
     hideTween = Tween<double>(begin: 1.0, end: 0.0);
@@ -149,4 +154,8 @@ class HeaderViewModel {
   int nextLanguageCode;
 
   double headerOpacity = 1.0;
+}
+
+TextDirection convertDirection(Direction direction) {
+  return direction == Direction.rtl ? TextDirection.rtl : TextDirection.ltr;
 }

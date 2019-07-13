@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+import 'direction.dart';
 
 class DirectionalString {
 
   final String text;
-  final TextDirection direction;
+  final Direction direction;
 
   DirectionalString(this.text, this.direction);
 }

@@ -1,16 +1,18 @@
 import 'dart:async';
 
+import 'package:birkon/asset_loader.dart';
 import 'package:birkon/header/header.dart';
 import 'package:birkon/header/header_button.dart';
 import 'package:birkon/language.dart';
+import 'package:birkon/localization/keys.dart';
 import 'package:birkon/localization/localizations.dart';
 import 'package:birkon/model/order/locale_order_provider.dart';
 import 'package:birkon/model/order/order.dart';
 import 'package:birkon/model/order/order_provider.dart';
 import 'package:birkon/model/order/preferences_order_provider.dart';
-import 'package:birkon/model/prayer.dart';
-import 'package:birkon/model/prayer_reader.dart';
 import 'package:birkon/prayer/prayer_content.dart';
+import 'package:common/prayer.dart';
+import 'package:common/prayer_reader.dart';
 import 'package:chooser/chooser.dart';
 import 'package:flutter/material.dart';
 
@@ -70,14 +72,15 @@ class _PrayerScreenState extends State<PrayerScreen> {
   }
 
   FutureBuilder<Data> _loadPrayer(BuildContext context) {
-    PrayerReader prayerReader = new PrayerReader();
+    final prayerReader = PrayerReader(FlutterPlayerAssetLoader(context));
+
     LocaleOrderProvider localeOrderProvider = new LocaleOrderProvider(context);
     PreferencesOrderProvider preferencesOrderProvider =
         new PreferencesOrderProvider();
     OrderProvider orderProvider =
         new OrderProvider(preferencesOrderProvider, localeOrderProvider);
 
-    Future<Prayer> prayer = prayerReader.readPrayer(context, widget.prayerId);
+    Future<Prayer> prayer = prayerReader.readPrayer(_getPrayerPath(widget.prayerId));
     Future<Order> order = orderProvider.loadOrder();
 
     return new FutureBuilder(
@@ -122,10 +125,10 @@ class _PrayerScreenState extends State<PrayerScreen> {
       return Chooser(
         ids: [data.order.primary, data.order.secondary, data.order.ternary],
         actionsBuilder: (context, key, id, pressed) => HeaderButton(
-              key: key,
-              text: AppLocalizations.getFromKey(context, id),
-              onPressed: pressed,
-            ),
+          key: key,
+          text: AppLocalizations.getFromKey(context, id),
+          onPressed: pressed,
+        ),
         header: Header(
           prayer: data.prayer,
           languageCode: data.languageId,
@@ -141,14 +144,15 @@ class _PrayerScreenState extends State<PrayerScreen> {
         },
         screenWidth: viewModel.screenWidth,
         chooserSink: StreamController()
-        ..stream.listen((state) {
-          if (state is ChooserStarted) {
-            languageSelectorStream.add(LanguageUpdateEvent.started(state.id));
-          }
-          if (state is ChooserFinished) {
-            languageSelectorStream.add(LanguageUpdateEvent.finished(state.id));
-          }
-        }),
+          ..stream.listen((state) {
+            if (state is ChooserStarted) {
+              languageSelectorStream.add(LanguageUpdateEvent.started(state.id));
+            }
+            if (state is ChooserFinished) {
+              languageSelectorStream
+                  .add(LanguageUpdateEvent.finished(state.id));
+            }
+          }),
       );
     }
 
@@ -177,6 +181,17 @@ class Data {
 
   copyWith({int languageId}) {
     return Data(this.prayer, this.order, languageId);
+  }
+}
+
+String _getPrayerPath(int prayerId) {
+  switch (prayerId) {
+    case BIRKAT_HA_MAZON:
+      return "assets/prayers/birkat_hamazon.json";
+    case SHMA_ISRAEL:
+      return "assets/prayers/shma_israel.json";
+    default:
+      return null;
   }
 }
 

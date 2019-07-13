@@ -1,6 +1,6 @@
-import 'package:birkon/dao/directional_string.dart';
 import 'package:birkon/localization/localizations.dart';
 import 'package:birkon/prayer/view/prayer_text.dart';
+import 'package:common/dao/directional_string.dart';
 import 'package:flutter/material.dart';
 
 class PrayerBottomSheet extends StatelessWidget {

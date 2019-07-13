@@ -1,4 +1,4 @@
-import 'package:birkon/dao/translated_prayer.dart';
+import 'dao/translated_prayer.dart';
 
 class Prayer {
   final TranslatedPrayer title;
