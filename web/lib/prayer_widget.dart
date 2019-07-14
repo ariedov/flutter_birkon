@@ -1,7 +1,6 @@
+import 'package:common/dao/direction.dart';
+import 'package:common/prayer.dart';
 import 'package:flutter_web/material.dart';
-
-import 'data/direction.dart';
-import 'data/prayer.dart';
 
 class PrayerWidget extends StatelessWidget {
   const PrayerWidget({Key key, this.prayer}) : super(key: key);
@@ -10,42 +9,77 @@ class PrayerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final children = List<Widget>();
+    return ListView.separated(
+        itemCount: prayer.paragraphs.length + 1,
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            return _buildTitle();
+          }
 
-    children.add(SizedBox(
-      height: 15.0,
-    ));
-    children.add(Text(
-      prayer.title,
-      textDirection: prayer.direction == Direction.right
-          ? TextDirection.rtl
-          : TextDirection.ltr,
-      style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-    ));
+          return _buildParagraph(index - 1);
+        },
+        separatorBuilder: (context, index) {
+          return SizedBox(height: 25,);
+        },);
+  }
 
-    children.addAll(_buildParagraphs());
-
-    return Column(
-      children: children,
+  _buildTitle() {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: Text(
+            prayer.title.russian.text,
+            textDirection: convertTextDirection(prayer.title.russian.direction),
+          ),
+        ),
+        // TODO: separator
+        Expanded(
+          child: Text(
+            prayer.title.transliteration.text,
+            textDirection:
+                convertTextDirection(prayer.title.transliteration.direction),
+          ),
+        ),
+        // TODO: separator
+        Expanded(
+          child: Text(
+            prayer.title.hebrew.text,
+            textDirection: convertTextDirection(prayer.title.hebrew.direction),
+          ),
+        ),
+      ],
     );
   }
 
-  _buildParagraphs() {
-    final widgets = List<Widget>();
-    for (final paragraph in prayer.paragraphs) {
-      widgets.addAll([
-        Text(
-          paragraph.text,
-          textDirection: prayer.direction == Direction.right
-              ? TextDirection.rtl
-              : TextDirection.ltr,
+  _buildParagraph(int index) {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: Text(
+            prayer.paragraphs[index].russian.text,
+            textDirection: convertTextDirection(prayer.title.russian.direction),
+          ),
         ),
-        SizedBox(
-          height: 10.0,
-        )
-      ]);
-    }
-
-    return widgets;
+        // TODO: separator
+        Expanded(
+          child: Text(
+            prayer.paragraphs[index].transliteration.text,
+            textDirection:
+                convertTextDirection(prayer.title.transliteration.direction),
+          ),
+        ),
+        // TODO: separator
+        Expanded(
+          child: Text(
+            prayer.paragraphs[index].hebrew.text,
+            textDirection: convertTextDirection(prayer.title.hebrew.direction),
+          ),
+        ),
+      ],
+    );
   }
+}
+
+TextDirection convertTextDirection(Direction direction) {
+  return direction == Direction.rtl ? TextDirection.rtl : TextDirection.ltr;
 }

@@ -1,4 +1,6 @@
-import 'package:birkon_web/data/prayer.dart';
+import 'package:birkon_web/web_prayer_asset_loader.dart';
+import 'package:common/prayer_reader.dart';
+import 'package:common/prayer.dart';
 import 'package:birkon_web/prayer_widget.dart';
 import 'package:flutter_web/material.dart';
 
@@ -23,25 +25,18 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final assetLoader = WebPrayerAssetLoader();
+    final prayerReader = PrayerReader(assetLoader);
+
     return Scaffold(
-      body: Row(
-        children: [
-          Expanded(
-            child: PrayerWidget(
-              prayer: Prayer(title: "Russian", paragraphs: []),
-            ),
-          ), // russian
-          Expanded(
-            child: PrayerWidget(
-              prayer: Prayer(title: "Transliteration", paragraphs: []),
-            ),
-          ), // transliteration
-          Expanded(
-              child: PrayerWidget(
-            prayer: Prayer(title: "Hebrew", paragraphs: []),
-          )), // hebrew
-        ],
-      ),
+      body: FutureBuilder(
+          future: prayerReader.readPrayer("shma_israel.json"),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return PrayerWidget(prayer: snapshot.data);
+            }
+            return Center(child: CircularProgressIndicator());
+          }),
     );
   }
 }
